@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../programs/programs-toolbar/programs-toolbar.dart';
 const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red);
 
+
+
 class ProgramsPageLayout extends StatelessWidget {
   const ProgramsPageLayout({super.key});
 
@@ -14,6 +16,7 @@ class ProgramsPageLayout extends StatelessWidget {
           ListView(
             padding: const EdgeInsets.all(8),
             children: <Widget>[
+              const SizedBox(height: 200.0),
               Card(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -176,7 +179,7 @@ class ProgramsPageLayout extends StatelessWidget {
             top: 0,
             left: 0,
             child: ProgramsToolbarWidget()
-            ),
+        ),
       ],
       )
       

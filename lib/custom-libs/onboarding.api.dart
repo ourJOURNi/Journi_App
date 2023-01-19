@@ -9,7 +9,7 @@ import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import './profile.api.dart';
 
-void configLoading() {
+void configLoginLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.wave

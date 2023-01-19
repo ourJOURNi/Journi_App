@@ -6,7 +6,6 @@ import 'tabs/programs/programs-layout.dart';
 import 'login/login-page.dart';
 import 'custom-libs/onboarding.api.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'tabs/programs/favorites/favorites-page.dart';
 
 goToTabsPages() {
   return const MaterialApp(
@@ -25,7 +24,7 @@ logout() {
 }
 
 void main() => {
-  configLoading(),
+  configLoginLoading(),
   runApp(const RootWidget())
 };
 
@@ -57,7 +56,10 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  int _selectedIndex = 0;
+  // 0 = Home
+  // 1 = Programs
+  // 2 = Profile
+  int _selectedIndex = 1;
   var _pageName = "Home";
   
   static final List<Widget> _widgetOptions = <Widget>[
@@ -84,20 +86,13 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-
-    void goToProgramsFavorites() {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const ProgramFavoritesPage(),
-        ),
-      );
-    }
     
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(240, 19, 119, 200),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -113,7 +108,8 @@ class _TabsState extends State<Tabs> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(255, 255, 173, 58),
         onTap: _onItemTapped,
       ),
     );

@@ -20,7 +20,7 @@ import 'profile-info/profile-info.dart';
                 isScrollControlled: true,
                 context: context, 
                 builder: (BuildContext context) {
-                    getCamera();
+                    // getCamera();
                     return Center(
                       // heightFactor: 100.0,
                       child: Column(
