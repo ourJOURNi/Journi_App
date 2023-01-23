@@ -1,5 +1,6 @@
 // Flutter Splash Screen Docs @ https://docs.flutter.dev/development/ui/advanced/splash-screen
 import 'package:flutter/material.dart';
+import 'package:layout/tabs/programs/programs-page.dart';
 import 'tabs/home/home-layout.dart';
 import 'tabs/profile/profile-page.dart';
 import 'tabs/programs/programs-layout.dart';
@@ -64,7 +65,7 @@ class _TabsState extends State<Tabs> {
   
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePageLayout(),
-    const ProgramsPageLayout(),
+    const ProgramsPage(),
     const ProfilePageWidget(),
   ];
 
