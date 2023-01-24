@@ -60,7 +60,7 @@ class _TabsState extends State<Tabs> {
   // 0 = Home
   // 1 = Programs
   // 2 = Profile
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
   var _pageName = "Home";
   
   static final List<Widget> _widgetOptions = <Widget>[
