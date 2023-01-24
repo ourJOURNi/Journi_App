@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:layout/login/register-page.dart';
 import '../models/model_barrel.dart';
 import '../models/result_error.dart';
 
@@ -22,10 +20,11 @@ class ProfileService {
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   Future<Profile> getProfile(String email) async {
+    print('$email from LoginPage');
     final response = await _httpClient.post(
       url,
       headers: customHeaders,
-      body: jsonEncode({'email': 'eddie@journi.org'})
+      body: jsonEncode({'email': email})
     );
     // final profile = Profile.fromJson(json.decode(response.body));
     // print(profile);

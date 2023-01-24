@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:layout/tabs/profile/bloc/profile_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../profile/profile-modals.dart';
-import '../profile/profile-info.dart';
 import '../../global-styles.dart';
  
 

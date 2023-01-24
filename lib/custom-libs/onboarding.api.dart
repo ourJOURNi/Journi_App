@@ -7,7 +7,8 @@ import '../login/register-page.dart';
 import 'snackbars.dart';
 import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import './profile.api.dart';
+import '../repository/models/profile.dart';
+import '../tabs/profile/bloc/profile_bloc.dart';
 
 void configLoginLoading() {
   EasyLoading.instance
@@ -43,44 +44,61 @@ Future<void> logout(context) async{
 }
 
 Future<void> login(
-  String email, 
+  String loginEmail, 
   String password, 
   BuildContext context,
   TextEditingController emailCTRL,
   TextEditingController passwordCTRL,
   ) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/login-profile');
-  final Map<String, String> customHeaders = {"content-type": "application/json" };
+    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/login-profile');
+    final Map<String, String> customHeaders = {"content-type": "application/json" };
 
-  await http.post(
+    print('Attempting to login');
+    print(loginEmail);
+
+    final response = await http.post(
         url, 
         headers: customHeaders,
-        body: jsonEncode({"email": email, "password": password}))
-          .then((value) => {
-            if(value.statusCode == 200) {
-              EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
-                .then((value) => {
-                  emailCTRL.clear(),
-                  passwordCTRL.clear(),
-                  Timer(const Duration(seconds: 1), () => {
-                    successSnackBar(context, "Logged in Successfully"),
-                    emailCTRL.clear(),
-                    passwordCTRL.clear(),
-                    EasyLoading.dismiss(),
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const Tabs(),
-                      ),
-                    ),
-                  })
-                }),
-            },
-            if(value.statusCode == 400) {
-                failureSnackBar(context, "Bad email or password.")
-            }
+        body: jsonEncode({"email": loginEmail, "password": password}));
+      
+
+    final jsonResponse = response.body;
+    final parsedJSON = jsonDecode(jsonResponse);
+
+    if(response.statusCode == 200) {
+      print('Status 200! @ Login');
+      print(parsedJSON['email']);
+      print(parsedJSON['firstName']);
+      print(parsedJSON['lastName']);
+      print(parsedJSON['dateRegistered']);
+      print(parsedJSON);
+    }
+
+      EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
+        .then((value) => {
+          emailCTRL.clear(),
+          passwordCTRL.clear(),
+          
+          Timer(const Duration(seconds: 1), () => {
+            successSnackBar(context, "Logged in Successfully"),
+            emailCTRL.clear(),
+            passwordCTRL.clear(),
+            EasyLoading.dismiss(),
+
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Tabs(email: email),
+              ),
+            ),
           })
-          .catchError((e) => { print(e.toString())});
-}
+        }
+      );
+
+      // return Profile(email: parsedJSON['email'], firstName: parsedJSON['firstName'], lastName: parsedJSON['lastName'], dateRegistered: parsedJSON['dateRegistered']);
+
+    }
+
+
 
 Future<void> register(
   String firstName, 

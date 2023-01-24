@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'forgot-pass-page.dart';
 import '../custom-libs/onboarding.api.dart';
 
-// For Development Only.
-String email = "eddie@journi.org";
-String password = "1234";
+String loginEmail = "";
+String password = "";
 
 
 class LoginPage extends StatelessWidget {
@@ -13,7 +12,7 @@ class LoginPage extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
-  final emailCTRL = TextEditingController();
+  final loginEmailCTRL = TextEditingController();
   final passwordCTRL = TextEditingController();
 
     return Scaffold(
@@ -41,10 +40,12 @@ class LoginPage extends StatelessWidget {
                 ElevatedButton(
                   style: buttonBlueStyle,
                   onPressed: () => {
-                      login(email, password, context, emailCTRL, passwordCTRL)
+                      login(loginEmail, password, context, loginEmailCTRL, passwordCTRL)
                         .then((value) => {
-                          email = "",
-                          password = "",
+                          print('From Login Button'),
+                          print(loginEmail),
+                          print('----'),
+                          
                         })
                       
                   }, 
@@ -111,8 +112,8 @@ class _LoginFormState extends State<LoginForm>  {
             child: 
               TextFormField(
                 onChanged: (text) {
-                  email = text;
-                  print('Email: ${email}');
+                  loginEmail = text;
+                  print('Email: ${loginEmail}');
                 },
                 decoration: const InputDecoration(
                   icon: Icon(Icons.email_rounded),
@@ -142,7 +143,7 @@ class _LoginFormState extends State<LoginForm>  {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  return null;
+                  return password;
                 },
               ),
           )

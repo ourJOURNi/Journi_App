@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:layout/tabs/programs/programs-page.dart';
 import 'tabs/home/home-layout.dart';
 import 'tabs/profile/profile-page.dart';
-import 'tabs/programs/programs-layout.dart';
 import 'login/login-page.dart';
 import 'custom-libs/onboarding.api.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-goToTabsPages() {
-  return const MaterialApp(
-        home: Scaffold(
-          body: Tabs(),
-        ),
-      );
-}
 
 logout() {
   return const MaterialApp(
@@ -43,14 +34,15 @@ class _RootWidgetState extends State<RootWidget> {
     return MaterialApp(
         builder: EasyLoading.init(),
         home: const Scaffold(
-          body: Tabs(),
+          body: LoginPage(),
         ),
       );
   }
 }
 
 class Tabs extends StatefulWidget {
-  const Tabs({super.key});
+  const Tabs({super.key, required String email}) : email = '';
+  final String email;
 
   @override
   State<Tabs> createState() => _TabsState();
@@ -87,6 +79,8 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
+  print('From Tabs');
+  print(widget.email);
     
     return Scaffold(
       body: Center(
