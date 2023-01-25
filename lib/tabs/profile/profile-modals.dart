@@ -1,9 +1,8 @@
  import 'package:flutter/material.dart';
 import 'package:layout/global-styles.dart';
-import 'package:layout/login/register-page.dart';
-import '../../custom-libs/onboarding.api.dart';
+import '../../custom-libs/profile.api.dart';
 
-  Widget updatePhotoModal(context) {
+  Widget updatePhotoModal(context, blocContext) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
             leading: const Icon(Icons.camera_alt),
@@ -101,7 +100,15 @@ import '../../custom-libs/onboarding.api.dart';
             }
           );
   }
-  Widget updateNameModal(context) {
+  
+  var newFirstName = "";
+  var newLastName = "";
+  var updateNamePassword = "";
+  var firstNameCTRL = TextEditingController();
+  var lastNameCTRL = TextEditingController();
+  var updateNamePasswordCTRL = TextEditingController();
+
+  Widget updateNameModal(context, blocContext, email, currentFirstName, currentLastName) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return 
           ListTile(
@@ -133,10 +140,17 @@ import '../../custom-libs/onboarding.api.dart';
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
+
+                                  // First Name
                                   TextFormField(
-                                    decoration: const InputDecoration(
+                                    controller: firstNameCTRL,
+                                    onChanged: (text) => {
+                                      newFirstName = text,
+                                      print(newFirstName),
+                                    },
+                                    decoration: InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: 'Enter your First Name',
+                                      hintText: currentFirstName,
                                     ),
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
@@ -146,10 +160,17 @@ import '../../custom-libs/onboarding.api.dart';
                                     },
                                   ),
                                   verticalInputDivider,
+
+                                  // Last Name
                                   TextFormField(
-                                    decoration: const InputDecoration(
+                                    controller: lastNameCTRL,
+                                    onChanged: (text) => {
+                                      newLastName = text,
+                                      print(newLastName),
+                                    },
+                                    decoration: InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: 'Enter your Last Name',
+                                      hintText: currentLastName,
                                     ),
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
@@ -159,7 +180,14 @@ import '../../custom-libs/onboarding.api.dart';
                                     },
                                   ),
                                   verticalInputDivider,
+
+                                  // Password
                                   TextFormField(
+                                    controller: updateNamePasswordCTRL,
+                                    onChanged: (text) => {
+                                      updateNamePassword = text,
+                                      print(newLastName),
+                                    },
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Password',
@@ -175,11 +203,23 @@ import '../../custom-libs/onboarding.api.dart';
                               ),
                             )
                           ),
+
+                          // Submit Button
                           ElevatedButton(
                             style: modalButtonStyle,
                             onPressed: () {
                               // Validate will return true if the form is valid, or false if
                               // the form is invalid.
+                              print('Attempting to Update Name');
+                              
+                              // Detect if any inputs were untouched
+                              if(newFirstName == "") {
+                                newFirstName = currentFirstName;
+                              }
+                              if(newLastName == "") {
+                                newLastName = currentLastName;
+                              }
+                              updateName(context, blocContext, email, newFirstName, newLastName, updateNamePassword, firstNameCTRL, lastNameCTRL, updateNamePasswordCTRL);
                               if (formKey.currentState!.validate()) {
                                 // Process data.
                               }
@@ -187,6 +227,8 @@ import '../../custom-libs/onboarding.api.dart';
                             child: const Text('Submit'),
                           ),
                           verticalButtonDivider,
+
+                          // Cancel Button
                           ElevatedButton(
                             style: modalButtonCancelStyle,
                             onPressed: () => {
@@ -204,14 +246,13 @@ import '../../custom-libs/onboarding.api.dart';
             }
           );
   }
-  Widget updateEmailModal(context) {
+  
+  var newEmail = "";
+  var emailPassword = "";
+  var newEmailCTRL = TextEditingController();
+  var updateEmailPasswordCTRL = TextEditingController();
+  Widget updateEmailModal(context, state, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    var email = "";
-    var newEmail = "";
-
-    final newEmailCTRL = TextEditingController();
-    final passwordCTRL = TextEditingController();
-
     return ListTile(
             leading: const Icon(Icons.email),
             title: const Text('Update Email'),
@@ -231,9 +272,9 @@ import '../../custom-libs/onboarding.api.dart';
                                 fontSize: 25,
                               ),),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text('email@email.com', style: modalHeaderStyle)),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text('$currentEmail', style: modalHeaderStyle)),
                           Padding(
                             padding: modalInputPadding,
                             child: Form(
@@ -241,12 +282,13 @@ import '../../custom-libs/onboarding.api.dart';
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
+                                  // New Email
                                   TextFormField(
-                                    onChanged: (text) {
-                                      newEmail = text;
-                                      print('Email: ${newEmail}');
-                                    },
                                     controller: newEmailCTRL,
+                                    onChanged: (text) => {
+                                      newEmail = text,
+                                      print(newEmail),
+                                    },
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Enter your new Email',
@@ -259,11 +301,13 @@ import '../../custom-libs/onboarding.api.dart';
                                     },
                                   ),
                                   verticalInputDivider,
+                                  // Password
                                   TextFormField(
-                                    onChanged: (text) {
-                                      password = text;
+                                    controller: updateEmailPasswordCTRL,
+                                    onChanged: (text) => {
+                                      emailPassword = text,
+                                      print(emailPassword),
                                     },
-                                    controller: passwordCTRL,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Password',
@@ -279,12 +323,24 @@ import '../../custom-libs/onboarding.api.dart';
                               ),
                             )
                           ),
+
+                          // Submit Button
                           ElevatedButton(
                             style: modalButtonStyle,
                             onPressed: () {
-                              changeEmail(email, newEmail, password);
+                              // updateEmail(email, newEmail, password);
                               // Validate will return true if the form is valid, or false if
                               // the form is invalid.
+                              if (formKey.currentState!.validate()) {
+                                // Process data.
+                              }
+                              
+                              // Detect if any inputs were untouched
+                              if(newEmail == "") {
+                                print('No new email enterted!');
+                                return;
+                              }
+                              updateEmail(context, state, currentEmail, newEmail, emailPassword, newEmailCTRL, updateEmailPasswordCTRL);
                               if (formKey.currentState!.validate()) {
                                 // Process data.
                               }
@@ -292,6 +348,8 @@ import '../../custom-libs/onboarding.api.dart';
                             child: const Text('Submit'),
                           ),
                           verticalButtonDivider,
+
+                          // Cancel Button
                           ElevatedButton(
                             style: modalButtonCancelStyle,
                             onPressed: () => {
@@ -309,7 +367,12 @@ import '../../custom-libs/onboarding.api.dart';
             }
           );
   }
-  Widget updatePasswordModal(context) {
+  
+  var newPassword = "";
+  var oldPassword = "";
+  var oldPasswordPasswordCTRL = TextEditingController();
+  var updatePasswordPasswordCTRL = TextEditingController();
+  Widget updatePasswordModal(context, blocContext, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
             leading: const Icon(Icons.email),
@@ -338,6 +401,11 @@ import '../../custom-libs/onboarding.api.dart';
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                   TextFormField(
+                                    controller: updatePasswordPasswordCTRL,
+                                    onChanged: (text) => {
+                                      newPassword = text,
+                                      print(newPassword),
+                                    },
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Enter your new Password',
@@ -351,6 +419,11 @@ import '../../custom-libs/onboarding.api.dart';
                                   ),
                                   verticalButtonDivider,
                                   TextFormField(
+                                    controller: oldPasswordPasswordCTRL,
+                                    onChanged: (text) => {
+                                      oldPassword = text,
+                                      print(text),
+                                    },
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Enter your current Password',
@@ -375,6 +448,8 @@ import '../../custom-libs/onboarding.api.dart';
                             if (formKey.currentState!.validate()) {
                               // Process data.
                             }
+                            updatePassword(context, blocContext, currentEmail, oldPassword, newPassword, oldPasswordPasswordCTRL, updatePasswordPasswordCTRL);
+
                           },
                           child: const Text('Submit'),
                         ),
@@ -396,6 +471,7 @@ import '../../custom-libs/onboarding.api.dart';
             }
           );
   }
+  
   Widget logoutModal(context) {
     return ListTile(
             leading: const Icon(Icons.logout, color: Colors.red,),
@@ -424,7 +500,7 @@ import '../../custom-libs/onboarding.api.dart';
                           ElevatedButton(
                             style: modalButtonStyle,
                             onPressed: () => {
-                               logout(context)
+                              //  logout(context)
                             }, 
                             child: const Text('Logout')
                           ),

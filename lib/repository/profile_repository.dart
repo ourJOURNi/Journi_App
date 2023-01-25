@@ -9,4 +9,5 @@ class ProfileRepository {
   final ProfileService service;
 
   Future<Profile> getProfile(email) async => service.getProfile(loginEmail);
+  Future<List<Program>> getFavoritePrograms() async => service.getFavoritePrograms(loginEmail);
 }

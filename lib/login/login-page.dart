@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'forgot-pass-page.dart';
 import '../custom-libs/onboarding.api.dart';
 
-String loginEmail = "";
-String password = "";
+String loginEmail = "eddie@journi.org";
+String password = "2222";
 
 
 class LoginPage extends StatelessWidget {

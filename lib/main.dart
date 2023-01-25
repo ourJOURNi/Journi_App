@@ -52,8 +52,7 @@ class _TabsState extends State<Tabs> {
   // 0 = Home
   // 1 = Programs
   // 2 = Profile
-  int _selectedIndex = 2;
-  var _pageName = "Home";
+  int _selectedIndex = 1;
   
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePageLayout(),
@@ -64,24 +63,11 @@ class _TabsState extends State<Tabs> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      switch (index) {
-        case 0: {_pageName = "Home"; }
-        break;
-        case 1: {_pageName = "Programs"; }
-        break;
-        case 2: {_pageName = "Profile"; }
-        break;
-
-        default:
-      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-  print('From Tabs');
-  print(widget.email);
-    
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

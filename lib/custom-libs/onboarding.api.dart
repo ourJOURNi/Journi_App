@@ -87,7 +87,7 @@ Future<void> login(
 
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => Tabs(email: email),
+                builder: (context) => Tabs(email: loginEmail),
               ),
             ),
           })
@@ -162,7 +162,7 @@ Future<void> sendRegisterCode(String email, String code, BuildContext context) a
  }
 
 Future<void> changeEmail(String email, String newEmail, String password) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/change-email');
+  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-email');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   
