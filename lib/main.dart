@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:layout/tabs/programs/programs-page.dart';
 import 'tabs/home/home-layout.dart';
 import 'tabs/profile/profile-page.dart';
-import 'tabs/programs/programs-layout.dart';
 import 'login/login-page.dart';
 import 'custom-libs/onboarding.api.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-goToTabsPages() {
-  return const MaterialApp(
-        home: Scaffold(
-          body: Tabs(),
-        ),
-      );
-}
 
 logout() {
   return const MaterialApp(
@@ -43,14 +34,15 @@ class _RootWidgetState extends State<RootWidget> {
     return MaterialApp(
         builder: EasyLoading.init(),
         home: const Scaffold(
-          body: Tabs(),
+          body: LoginPage(),
         ),
       );
   }
 }
 
 class Tabs extends StatefulWidget {
-  const Tabs({super.key});
+  const Tabs({super.key, required String email}) : email = '';
+  final String email;
 
   @override
   State<Tabs> createState() => _TabsState();
@@ -60,8 +52,7 @@ class _TabsState extends State<Tabs> {
   // 0 = Home
   // 1 = Programs
   // 2 = Profile
-  int _selectedIndex = 2;
-  var _pageName = "Home";
+  int _selectedIndex = 1;
   
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePageLayout(),
@@ -72,22 +63,11 @@ class _TabsState extends State<Tabs> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      switch (index) {
-        case 0: {_pageName = "Home"; }
-        break;
-        case 1: {_pageName = "Programs"; }
-        break;
-        case 2: {_pageName = "Profile"; }
-        break;
-
-        default:
-      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

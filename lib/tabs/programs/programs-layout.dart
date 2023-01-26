@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:layout/tabs/programs/bloc/programs_bloc.dart';
-import '../programs/programs-toolbar/programs-toolbar.dart';
+import 'programs-toolbar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
   class ProgramsLayout extends StatelessWidget {
     const ProgramsLayout({super.key});
 
+    final categoryID = "cat_1";
+
     @override
     Widget build(BuildContext context) {
       return BlocBuilder<ProgramsBloc, ProgramsState>(
         builder: (context, state) {
-          if(state.programs.isNotEmpty) {
-            print(state.programs[0].title);
-          }
+          // if(state.programs.isNotEmpty) {
+          // }
           return state.status.isSuccess
             ? Stack(
                 children: [

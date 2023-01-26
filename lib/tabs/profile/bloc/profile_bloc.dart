@@ -20,6 +20,7 @@ class ProfilesBloc extends Bloc<AllProfilesEvent, ProfilesState> {
     try {
       emit(state.copyWith(status: ProfilesStatus.loading));
       final profile = await profileRepository.getProfile(state.profile.email);
+      
       emit(
         state.copyWith(
           status: ProfilesStatus.success,

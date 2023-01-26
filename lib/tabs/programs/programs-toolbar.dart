@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import '../programs/bloc/programs_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../repository/models/model_barrel.dart';
 
 void configCategoryLoading() {
   EasyLoading.instance
@@ -23,17 +26,12 @@ void configCategoryLoading() {
 class ProgramsToolbarWidget extends StatefulWidget {
   const ProgramsToolbarWidget({super.key});
 
-  
-
   @override
   State<ProgramsToolbarWidget> createState() => _ProgramsToolbarState();
-
-  
 }
 
 class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
   String category = 'All';
-  bool searchBarFocused = false;
 
   void toolbarFocus(String category) {
     setState(() => {
@@ -53,13 +51,21 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
         ..userInteractions = true
         ..dismissOnTap = true,
       EasyLoading.show(status: 'Searching: $category'),
-      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: false)})
+      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: true)})
       });
   }
 
+  List<Program> allPrograms = [];
+  bool searchEmpty = false;
+  TextEditingController searchInputCTRL = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return BlocListener<ProgramsBloc, ProgramsState>(
+      listener: (context, state) => {
+        allPrograms = context.read<ProgramsBloc>().state.programs
+      },
+      child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: 180,
           child: 
@@ -84,12 +90,19 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                       children:  [
 
                         // Searchbar
-                        const Expanded(child: 
+                        Expanded(child: 
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 10),
+                            padding: const EdgeInsets.only(left: 20, right: 10),
                             child: TextField(
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
+                              controller: searchInputCTRL,
+                              onChanged: (String searchTerm) => {
+                                // Filter Program [title] by text
+                                // Create FiltedSearch Event on ProgramsBloc
+                                if(searchTerm.isEmpty) searchEmpty == true,
+                                context.read<ProgramsBloc>().add(SearchPrograms(allPrograms, true, searchTerm, searchEmpty))
+                              },
+                              style: const TextStyle(color: Colors.white),
+                              decoration: const InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   // width: 0.0 produces a thin "hairline" border
                                   borderSide: BorderSide(color: Color.fromARGB(255, 255, 173, 58), width: 2.0),
@@ -118,7 +131,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                                 // Makes the modal fullsceen height
                                 // isScrollControlled: true,
                                 context: context, 
-                                builder: (BuildContext context) {
+                                builder: (BuildContext newContext) {
                                     // getCamera();
                                     return Center(
                                       // heightFactor: 100.0,
@@ -141,12 +154,17 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                                               padding: const EdgeInsets.only(left: 50, right: 50),
                                               
                                               children: <Widget>[
+                                                // Favorites Button
                                                 ElevatedButton(
                                                   onPressed: () => {
-                                                    print('Favorites button')
+                                                    print('Favorites button'),
+                                                    // TODO: Hide Toolbar focus when looking at favorites
+                                                    toolbarFocus('Favorites'),
+                                                    context.read<ProgramsBloc>().add(GetProgramsByFavorites()),
+                                                    Navigator.pop(context)
                                                   },
-                                                  style: ButtonStyle(),
-                                                  child: Center(child: Text('Entry A')),
+                                                  style: const ButtonStyle(),
+                                                  child: const Center(child: Text('Favorites')),
                                                 ),
                                                 ElevatedButton(
                                                   onPressed: () => {
@@ -194,7 +212,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             style: ElevatedButton.styleFrom(
                               fixedSize: const Size(30.0, 45.0)
                             ),
-                            child: const Icon(Icons.filter_list, color: Colors.white)))
+                            child: const Icon(Icons.filter_list, color: Colors.white)
+                          )
+                        )
                     ],
                   ),
               
@@ -214,7 +234,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('All'),
-                                  toolbarFocus('All')
+                                  toolbarFocus('All'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetPrograms())
                                 },
                                 child: 
                                   Container(
@@ -248,7 +270,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 1'),
-                                  toolbarFocus('Category 1')
+                                  toolbarFocus('Category 1'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryOne())
                                 },
                                 child: 
                                   Container(
@@ -274,7 +298,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 3
+                          // Category 2
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -282,7 +306,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 2'),
-                                  toolbarFocus('Category 2')
+                                  toolbarFocus('Category 2'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryTwo())
                                 },
                                 child: 
                                   Container(
@@ -308,7 +334,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 4
+                          // Category 3
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -316,7 +342,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 3'),
-                                  toolbarFocus('Category 3')
+                                  toolbarFocus('Category 3'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryThree())
                                 },
                                 child: 
                                   Container(
@@ -342,7 +370,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 5
+                          // Category 4
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -350,7 +378,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 4'),
-                                  toolbarFocus('Category 4')
+                                  toolbarFocus('Category 4'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryFour())
                                 },
                                 child: 
                                   Container(
@@ -376,7 +406,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 6
+                          // Category 5
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -384,7 +414,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 5'),
-                                  toolbarFocus('Category 5')
+                                  toolbarFocus('Category 5'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryFive())
                                 },
                                 child: 
                                   Container(
@@ -410,7 +442,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 7
+                          // Category 6
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -418,7 +450,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 6'),
-                                  toolbarFocus('Category 6')
+                                  toolbarFocus('Category 6'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategorySix())
                                 },
                                 child: 
                                   Container(
@@ -444,7 +478,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 8
+                          // Category 7
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -452,7 +486,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 7'),
-                                  toolbarFocus('Category 7')
+                                  toolbarFocus('Category 7'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategorySeven())
                                 },
                                 child: 
                                   Container(
@@ -478,7 +514,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                             ]
                           ) 
                           ), 
-                          // Category 9
+                          // Category 8
                           Padding(
                             padding: const EdgeInsets.only(left: 23, right: 23),
                             child: Column(
@@ -486,7 +522,9 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                               GestureDetector(
                                 onTap: () => {
                                   print('Category 8'),
-                                  toolbarFocus('Category 8')
+                                  toolbarFocus('Category 8'),
+                                  searchInputCTRL.clear(),
+                                  context.read<ProgramsBloc>().add(GetProgramsByCategoryEight())
                                 },
                                 child: 
                                   Container(
@@ -517,6 +555,7 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                   )
             ])),
            
-        );
+        ),
+    );
   }
 }
