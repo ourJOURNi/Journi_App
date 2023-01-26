@@ -4,16 +4,24 @@ class AllProgramsEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
-
 class GetPrograms extends AllProgramsEvent {
   @override
   List<Object?> get props => [];
+}
+class SearchPrograms extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+  List<Program>  programs = [];
+  String searchTerm = '';
+  bool searchTapped = false;
+  bool searchEmpty = false;
+  SearchPrograms(this.programs, this.searchTapped, this.searchTerm, this.searchEmpty);
+
 }
 class GetProgramsByFavorites extends AllProgramsEvent {
   @override
   List<Object?> get props => [];
 }
-
 class GetProgramsByCategoryOne extends AllProgramsEvent {
   @override
   List<Object?> get props => [];

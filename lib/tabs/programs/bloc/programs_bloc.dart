@@ -14,6 +14,7 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
     // required this.profileRepository,
   }) : super(const ProgramsState()) {
     on<GetPrograms>(_mapGetProgramsEventToState);
+    on<SearchPrograms>(_mapSearchProgramsEventToState);
     on<GetProgramsByFavorites>(_mapGetProgramsFavoritesEventToState);
     on<GetProgramsByCategoryOne>(_mapGetProgramsByCategoryOneEventToState);
     on<GetProgramsByCategoryTwo>(_mapGetProgramsByCategoryTwoEventToState);
@@ -37,6 +38,50 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
         state.copyWith(
           status: ProgramsStatus.success,
           programs: programs,
+        ),
+      );
+    } catch (error) {
+      print(error);
+      emit(state.copyWith(status: ProgramsStatus.error));
+    }
+  }
+  void _mapSearchProgramsEventToState(
+      SearchPrograms event, Emitter<ProgramsState> emit) async {
+    try {
+      print('SEARCHING PROGRAMS');
+
+      emit(state.copyWith(status: ProgramsStatus.loading));
+
+      bool searchTapped = event.searchTapped;
+      String searchTerm = event.searchTerm;
+
+      List<Program> filterPrograms = [];
+      List<Program> initialPrograms = await programRepository.getPrograms();
+
+      event.programs.forEach((program) {
+        if(program.title.toLowerCase().contains(event.searchTerm.toLowerCase())) filterPrograms.add(program);
+        if(event.searchTerm.isEmpty && searchTapped) filterPrograms = [];
+        // if(event.searchTerm.isNotEmpty && searchTapped && filterPrograms.isEmpty) filterPrograms = initialPrograms;
+      });
+
+      if(filterPrograms.isEmpty) {
+        print('No Results with that searchterm');
+      }
+      
+      print('filterPrograms.length');
+      print(filterPrograms.length);
+
+      print('searchTapped:');
+      print(searchTapped);
+
+      print('searchTerm:');
+      print(searchTerm);
+
+
+      emit(
+        state.copyWith(
+          status: ProgramsStatus.success,
+          programs: searchTapped && filterPrograms.isEmpty && searchTerm.isEmpty ? initialPrograms : filterPrograms,
         ),
       );
     } catch (error) {
