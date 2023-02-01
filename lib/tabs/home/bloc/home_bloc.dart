@@ -20,6 +20,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       emit(state.copyWith(status: HomeStatus.loading));
       final programs = await homeRepository.getPrograms();
+      
 
       emit(
         state.copyWith(
