@@ -1,7 +1,7 @@
 // Flutter Splash Screen Docs @ https://docs.flutter.dev/development/ui/advanced/splash-screen
 import 'package:flutter/material.dart';
 import 'package:layout/tabs/programs/programs-page.dart';
-import 'tabs/home/home-layout.dart';
+import './tabs/home/home-page.dart';
 import 'tabs/profile/profile-page.dart';
 import 'login/login-page.dart';
 import 'custom-libs/onboarding.api.dart';
@@ -52,12 +52,12 @@ class _TabsState extends State<Tabs> {
   // 0 = Home
   // 1 = Programs
   // 2 = Profile
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   
   static final List<Widget> _widgetOptions = <Widget>[
-    const HomePageLayout(),
+    const HomePage(),
     const ProgramsPage(),
-    const ProfilePageWidget(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
