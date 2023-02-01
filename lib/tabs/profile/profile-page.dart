@@ -6,8 +6,8 @@ import '../../repository/service/profile_service.dart';
 import '../../tabs/profile/bloc/profile_bloc.dart';
 import '../profile/profile_layout.dart';
   
-class ProfilePageWidget extends StatelessWidget {
-  const ProfilePageWidget({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {

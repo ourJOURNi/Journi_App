@@ -10,10 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
     @override
     Widget build(BuildContext context) {
+      
       return BlocBuilder<ProgramsBloc, ProgramsState>(
         builder: (context, state) {
-          // if(state.programs.isNotEmpty) {
-          // }
+
           return state.status.isSuccess
             ? Stack(
                 children: [
@@ -54,7 +54,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                   const ProgramsToolbarWidget()
                   ],
               ) : state.status.isLoading
-                ? Stack(
+                  ? Stack(
                   children: [
                     ListView(
                       padding: const EdgeInsets.all(8),
@@ -67,7 +67,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                     ],
                   )
                 : state.status.isError
-                    ? Stack(
+                  ? Stack(
                       children: [
                         ListView(
                           padding: const EdgeInsets.all(8),
@@ -78,7 +78,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
                         ),
                         const ProgramsToolbarWidget()
                         ],
-                      ): const Text('??');
+                      ) 
+                : const Text('??');
                   }
         );
   }

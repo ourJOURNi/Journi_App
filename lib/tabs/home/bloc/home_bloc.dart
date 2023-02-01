@@ -10,25 +10,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required this.homeRepository,
   }) : super(const HomeState()) {
-    on<HomeEvent>(_mapHomeEventEventToState);
+    on<GetPrograms>(_mapGetProgramsToState);
   }
 
   final HomeRepository homeRepository;
 
-  void _mapHomeEventEventToState(
-      HomeEvent event, Emitter<HomeState> emit) async {
+  void _mapGetProgramsToState(
+      GetPrograms event, Emitter<HomeState> emit) async {
     try {
       emit(state.copyWith(status: HomeStatus.loading));
-      // final home = await homeRepository.getHome(state.home.email);
-      
+      final programs = await homeRepository.getPrograms();
+
       emit(
         state.copyWith(
           status: HomeStatus.success,
+          programs: programs
         ),
       );
     } catch (error) {
       print(error);
-      emit(state.copyWith(status: HomeStatus.error));
+      final programs = await homeRepository.getPrograms();
+      emit(state.copyWith(
+        status: HomeStatus.error,
+        programs: programs
+        ));
     }
   }
 }

@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:layout/login/login-page.dart';
 import '../../../../../repository/models/model_barrel.dart';
 import '../../../../../repository/program_repository.dart';
-import '../../../../../repository/profile_repository.dart';
 
 part 'programs_event.dart';
 part 'programs_state.dart';
@@ -34,6 +32,7 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
     try {
       emit(state.copyWith(status: ProgramsStatus.loading));
       final programs = await programRepository.getPrograms();
+      
       emit(
         state.copyWith(
           status: ProgramsStatus.success,

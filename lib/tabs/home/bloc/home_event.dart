@@ -4,3 +4,7 @@ class HomeEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
+class GetPrograms extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}
