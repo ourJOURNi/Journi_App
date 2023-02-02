@@ -5,6 +5,8 @@ import '../../global-styles.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import '../../custom-libs/onboarding.api.dart';
+import '../programs/program-page/program-page.dart';
 
 
 final Map<String, String> faqs = {
@@ -38,9 +40,11 @@ class HomeLayout extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
-                      const Text('Welcome to the App!', style: 
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: const Color.fromARGB(240, 19, 119, 200))
-                      ),
+                      Image.asset(
+                        'assets/journi_logo.png',
+                          semanticLabel: "Journi Logo",
+                          height: 50,
+                        ),
                       const SizedBox(height: 20),
                       Image.asset(
                         'assets/det_skyline.jpeg',
@@ -50,14 +54,18 @@ class HomeLayout extends StatelessWidget {
                   ),
                   ),
 
-                 // Latest things To Do
                  Container(
-                  height: 160,
+                  height: 205,
+                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   alignment: Alignment.topLeft,
-                  margin: EdgeInsets.all(20),
+                  // margin: EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      const Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. '),
+                      Container(
+                        margin: EdgeInsets.only(top: 20, left: 20), 
+                        child: const Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. ',
+                        style: TextStyle(fontSize: 16))
+                      ),
                       const SizedBox(height: 50),
                       // Row(children: const [
                       //   Text('Any questions or concerns?', 
@@ -71,8 +79,8 @@ class HomeLayout extends StatelessWidget {
                     ],
                   ),
                   ),
-
-                 // Latest things To Do
+                
+                 // Latest
                  Container(
                   height: 50,
                   alignment: Alignment.topLeft,
@@ -80,11 +88,10 @@ class HomeLayout extends StatelessWidget {
                   child: const Text('Latest Things To Do', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
                   ),
 
-                // 5 closest Programs to current date
-                 Container(
+                 // 5 closest Programs to current date
+                  Container(
                   height: 400,
-                  decoration: const BoxDecoration(
-                  ),
+                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   child: ListView.builder(
                     // This next line does the trick.
                     scrollDirection: Axis.horizontal,
@@ -113,7 +120,13 @@ class HomeLayout extends StatelessWidget {
                             ),
 
                             SizedBox(height: 16),
-                            ElevatedButton(onPressed: null, child: Text('Tap'))
+                            ElevatedButton(onPressed: () => {
+                              Navigator.of(context).push(
+                                 MaterialPageRoute(
+                                   builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
+                                 ),
+                               )
+                            }, child: Text('Tap'))
                           ],
                         ),
                       );
@@ -122,19 +135,17 @@ class HomeLayout extends StatelessWidget {
                   ),
                 ),
 
-                Container(
+                  // Photos
+                  Container(
                   height: 50,
                   alignment: Alignment.topLeft,
                   margin: EdgeInsets.only(left: 20, top: 20),
                   child: const Text('Photos', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
-                ),
-
-                 // Photos
-                 Container(
-                  height: 280,
-                  decoration: const BoxDecoration(
-                    // color: Colors.black54,
                   ),
+
+                  Container(
+                  height: 380,
+                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   child: ListView(
                     // This next line does the trick.
                     scrollDirection: Axis.horizontal,
@@ -147,7 +158,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/KAR09930.jpg',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -160,7 +171,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/journi_pic_3.jpeg',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -173,7 +184,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/journi_pic_2.jpeg',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -186,7 +197,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/journi_pic_1.jpeg',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -199,7 +210,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/KAR09893.jpg',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -223,13 +234,13 @@ class HomeLayout extends StatelessWidget {
                   )
                 ),
 
-                 // FAQ
-                 Container(
-                  height: 400,
-                  decoration: const BoxDecoration(
+                  // FAQ
+                  Container(
+                    height: 400,
+                    decoration: const BoxDecoration(
                     // color: Colors.black,
                   ),
-                  child: Column(
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -313,7 +324,7 @@ class HomeLayout extends StatelessWidget {
                        )
                     ],
                   ),
-                )
+                  )
                 ],
               ) : state.status.isLoading 
                   ? ListView.builder(

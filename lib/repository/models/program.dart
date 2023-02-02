@@ -10,19 +10,22 @@ class Program {
     required this.date,
     required this.summary,
     required this.details,
+    required this.photo,
   });
   final String title;
   final String category;
   final String date;
   final String summary;
   final String details;
+  final String photo;
 
   static const empty = Program(
     title: '',
     category: '',
     date: '',
     summary: '',
-    details: ''
+    details: '',
+    photo: ''
   );
 
   factory Program.fromJson(Map<String, dynamic> json) => _$ProgramFromJson(json);

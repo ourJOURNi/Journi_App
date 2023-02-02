@@ -5,7 +5,7 @@ const Divider transparentDivider = Divider(height: 10.0, color: Colors.transpare
 const Divider verticalButtonDivider = Divider(height: 20.0, color: Colors.transparent);
 const Divider verticalInputDivider = Divider(height: 20.0, color: Colors.transparent);
 const Divider bigTransparentDivider = Divider(height: 80.0, color: Colors.transparent);
-const Expanded expandedBottomOfPageDivider =  Expanded( child: Divider(height: 1.0, color: Colors.transparent));
+const Expanded expandedBottomOfPageDivider =  Expanded( child: Divider(height: 0.9, color: Colors.transparent));
 
 // Modal Styles 
 const modalInputPadding = EdgeInsets.all(50.0);

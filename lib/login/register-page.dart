@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../global-styles.dart';
 import '../custom-libs/onboarding.api.dart';
+import '../custom-libs/camera.dart';
 
 String firstName = "";
 String lastName = "";
@@ -15,7 +16,8 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _infoFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
   final firstNameCTRL = TextEditingController();
   final lastNameCTRL = TextEditingController();
   final emailCTRL = TextEditingController();
@@ -24,40 +26,35 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override 
   Widget build(BuildContext context) {
-    return  
-      Stepper(
-      currentStep: _index,
-      onStepCancel: () {
-        if (_index > 0) {
-          setState(() {
-            _index -= 1;
-          });
-        }
-      },
-      onStepContinue: () {
-        if (_index <= 0) {
-          setState(() {
-            _index += 1;
-          });
-        }
-      },
-      onStepTapped: (int index) {
-        setState(() {
-          _index = index;
-        });
-      },
-      steps: <Step>[
-        Step(
-          title: const Text('Step 1 title'),
-          content: SizedBox(
-            width: 300,
-            height: 380,
-            child: 
-          Form(
-            key: _formKey,
+    final PageController controller = PageController();
+    return PageView(
+      /// [PageView.scrollDirection] defaults to [Axis.horizontal].
+      /// Use [Axis.vertical] to scroll vertically.
+      physics: const NeverScrollableScrollPhysics(),
+      
+      controller: controller,
+      children: <Widget>[
+
+        // Page 1
+        Center(
+          child: Form(
+            key: _infoFormKey,
             child:
             Column(
               children: <Widget>[
+                verticalInputDivider,
+                Padding(
+                  padding: inputPadding,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,)
+                  ],)
+                ),
                 verticalInputDivider,
                 Padding(
                   padding: inputPadding,
@@ -65,6 +62,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     TextFormField(
                       autofocus: true,
                       controller: firstNameCTRL,
+                      textInputAction: TextInputAction.next,
                       onChanged: (text) {
                         firstName = text;
                         print('First Name: ${firstName}');
@@ -82,6 +80,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: 
                     TextFormField(
                       controller: lastNameCTRL,
+                      textInputAction: TextInputAction.next,
                       onChanged: (text) {
                         lastName = text;
                         print('Last Name: ${lastName}');
@@ -102,6 +101,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: 
                     TextFormField(
                       controller: emailCTRL,
+                      textInputAction: TextInputAction.next,
                       onChanged: (text) {
                         email = text;
                         print('Email: ${email}');
@@ -117,17 +117,131 @@ class _RegisterFormState extends State<RegisterForm> {
                       },
                     ),
                 ),
-                Padding(
+                expandedBottomOfPageDivider,
+                Container(
+                    margin: const EdgeInsets.only(top: 20, bottom: 50),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.jumpToPage(1);
+                      },
+                      style: buttonGreenStyle,
+                      child: const Text('Next', style: TextStyle(fontSize: 16)),
+                    ),
+                ),
+              ],
+            ),
+            )
+          ),
+        
+        // Page 2
+        Center(
+          child: Column(
+            children: [
+              verticalInputDivider,
+              Padding(
+                padding: inputPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                  SizedBox(width: 4),
+                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                  SizedBox(width: 4),
+                  CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,)
+                ],)
+              ),
+              SizedBox(height: 30),
+              Center(
+                child: Padding(
+                  padding: inputPadding,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.blueGrey,
+                  )
+                ),
+              ),
+              SizedBox(height: 20),
+              Column(
+                children: [
+                  ElevatedButton(
+                    style: buttonBlueStyle,
+                    onPressed: () => {
+                      print('Tapped Get Profile Picture Button from Register Page'),
+                      proPicGallery()
+                    }, 
+                    child: Text('Get from Photo Gallery')
+                  ),
+                  ElevatedButton(
+                    style: buttonBlueStyle,
+                    onPressed: () => {
+                      print('Tapped Get Profile Picture Button from Register Page'),
+                      proPicCamera()
+                    }, 
+                    child: Text('Get from Camera')
+                  ),
+                  ElevatedButton(
+                    style: buttonGreenStyle,
+                    onPressed: () => {
+                      controller.jumpToPage(2)
+                    }, 
+                    child: Text('Next')
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => {
+                        controller.jumpToPage(0) 
+                      }, 
+                        child: Text('Back')
+                      ),
+                      SizedBox(width: 4),
+                      ElevatedButton(
+                        onPressed: () => {
+                          // TODO: Add Skip Logic
+                          controller.jumpToPage(2) 
+                        }, 
+                        child: Text('Skip')
+                      )
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+        
+        // Page 3
+        Center(
+          child: Column(
+            children: [
+              verticalInputDivider,
+              Padding(
+                padding: inputPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                  SizedBox(width: 4),
+                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                  SizedBox(width: 4),
+                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,)
+                ],)
+              ),
+              SizedBox(height: 50),
+              Padding(
                   padding: inputPadding,
                   child: 
                     TextFormField(
                       controller: passwordCTRL,
                       onChanged: (text) {
-                        password = text;
-                        print('Password ${password}');
+                        email = text;
+                        print('Password: ${password}');
                       },
                       decoration: const InputDecoration(
                         hintText: 'Password',
+                        suffixIcon: Icon(Icons.remove_red_eye)
                       ),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
@@ -137,35 +251,31 @@ class _RegisterFormState extends State<RegisterForm> {
                       },
                     ),
                 ),
-                expandedBottomOfPageDivider,
-                Container(
-                    margin: const EdgeInsets.only(top: 20, bottom: 50),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        register(firstName, lastName, email, password, context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
-                          .then((value) => {
-                            firstName = "",
-                            lastName = "",
-                            email = "",
-                            password = "",
-                          });
-
-                      },
-                      style: buttonGreenStyle,
-                      child: const Text('Submit', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => {
+                  register(firstName, lastName, email, password, context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
+                  .then((value) => {
+                    firstName = "",
+                    lastName = "",
+                    email = "",
+                    password = "",
+                  })
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: Text('Complete Sign Up')
                     ),
-                  ),
-              ],
-            ),
-          )),
-        ),
-        const Step(
-          title: Text('Step 2 title'),
-          content: Text('Content for Step 2'),
+              ElevatedButton(
+                 onPressed: () => {
+                   controller.jumpToPage(1) 
+                 }, 
+                 child: Text('Back')
+              )
+            ]
+          )
         ),
       ],
     );
     
-    ;
   }
 }

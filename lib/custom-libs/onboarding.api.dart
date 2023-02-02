@@ -43,6 +43,8 @@ Future<void> logout(context) async{
               );
 }
 
+String userEmail = '';
+
 Future<void> login(
   String loginEmail, 
   String password, 
@@ -73,6 +75,8 @@ Future<void> login(
       print(parsedJSON['dateRegistered']);
       print(parsedJSON);
     }
+
+    userEmail = email;
 
       EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
         .then((value) => {

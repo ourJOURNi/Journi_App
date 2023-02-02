@@ -1,38 +1,20 @@
-import 'package:camera/camera.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter/material.dart';
+import '../global-styles.dart';
+import 'package:image_picker/image_picker.dart';
 
-var userCamera = CameraController(
-    const CameraDescription(
-      lensDirection: CameraLensDirection.front,
-      name: "",
-      sensorOrientation: 0,
-    ), 
-    ResolutionPreset.max, 
-    imageFormatGroup: ImageFormatGroup.yuv420
-  );
+final ImagePicker picker = ImagePicker();
 
-getCamera() async {
-  print("Getting Camera");
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
+// File? image;
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
+Future<XFile> proPicGallery() async {
+  print('Attempting to get user Sign Up Profile Picture');
+  final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if(image == null) return XFile('');
+  return image;
+} 
 
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
-
-  userCamera = CameraController(
-    firstCamera, 
-    ResolutionPreset.max, 
-    imageFormatGroup: ImageFormatGroup.yuv420
-  );
-  await userCamera.initialize();
-  // userCamera.startVideoRecording();
-
-  print(firstCamera);
-  print("\n");
-}
+Future<XFile>  proPicCamera() async {
+  print('Attempting to get user Sign Up Profile Picture');
+  final image = await ImagePicker().pickImage(source: ImageSource.camera);
+  if(image == null) return XFile('');
+  return image;
+} 
