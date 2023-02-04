@@ -220,7 +220,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   ),
 
                   Container(
-                  height: 380,
+                  height: 340,
                   decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   child: ListView(
                     // This next line does the trick.
@@ -230,65 +230,110 @@ class _HomeLayoutState extends State<HomeLayout> {
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
-                          textDirection: TextDirection.ltr,
+                        child: Stack(
+                          // alignment: Alignment.bottomRight,
                           children: [
                             Image.asset(
                             'assets/demo_photo_1.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
                             'assets/demo_photo_2.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
                             'assets/demo_photo_3.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
                             'assets/demo_photo_4.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
                             'assets/demo_photo_5.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -299,7 +344,7 @@ class _HomeLayoutState extends State<HomeLayout> {
 
                   // FAQ
                   Container(
-                    height: 400,
+                    height: 650,
                     decoration: const BoxDecoration(
                     // color: Colors.black,
                   ),
@@ -325,9 +370,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_1', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is Journi?', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('We are a non-profit organization dedicated to equipping communities with the skills and know-how to jump start local economies; to allow those communities to become globally competitive.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),
@@ -337,9 +382,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_2', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is the Front End Tech used in this app?', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('This app was built with Flutter, an open source framework by Google for building, natively compiled, multi-platform applications from a single codebase. In other words, this app can be built to be displayed on an iPhone, an Android, a Web Browser, and even apps for TVs. \n\nFlutter uses the language Dart, another open source project from Google. Dart is Object Oriented, designed for client side development,  and can be used in Mobile Apps, Web Apps, etc.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),
@@ -349,34 +394,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_3', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
-                            contentHorizontalPadding: 20,
-                            contentBorderWidth: 1,
-                            // onOpenSection: () => print('onOpenSection ...'),
-                            // onCloseSection: () => print('onCloseSection ...'),
-                          ),
-                          AccordionSection(
-                            isOpen: true,
-                            leftIcon: const Icon(Icons.add, color: Colors.white),
-                            
-                            headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_4', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
-                            contentHorizontalPadding: 20,
-                            contentBorderWidth: 1,
-                            // onOpenSection: () => print('onOpenSection ...'),
-                            // onCloseSection: () => print('onCloseSection ...'),
-                          ),
-                          AccordionSection(
-                            isOpen: true,
-                            leftIcon: const Icon(Icons.add, color: Colors.white),
-                            headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_5', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is the Back End Tech used in this app', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('On the server side, this is a NodeJS application. Node.js is a cross-platform, open-source server environment that can run on Windows, Linux, Unix, macOS, and more. Node.js is a back-end JavaScript runtime environment, runs on the V8 JavaScript Engine, and executes JavaScript code outside a web browser. \n\nInstead of being written in JavaScript, this server is written in TypeScript for better performance. TypeScript is a free and open source high-level programming language developed and maintained by Microsoft. It is a strict syntactical superset of JavaScript and adds optional static typing to the language. It is designed for the development of large applications and transpiles to JavaScript.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),

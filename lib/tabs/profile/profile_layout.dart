@@ -17,14 +17,14 @@ import 'package:skeleton_text/skeleton_text.dart';
             ? Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+                backgroundColor: const Color.fromARGB(240, 19, 119, 200),
                 shadowColor: Colors.transparent,
               ),
               body: ListView(
                children: [ 
                 
                 Container(
-                  color: const Color.fromARGB(255, 240, 240, 240),
+                  color: const Color.fromARGB(240, 19, 119, 200),
                   height: 250,
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: Column(
@@ -49,8 +49,8 @@ import 'package:skeleton_text/skeleton_text.dart';
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${state.profile.firstName} ${state.profile.lastName}', style: const TextStyle(fontSize: 24, color: Color.fromARGB(240, 19, 119, 200))),
-                            Text(state.profile.email, style: const TextStyle(fontSize: 13, color: Colors.grey))
+                            Text('${state.profile.firstName} ${state.profile.lastName}', style: const TextStyle(fontSize: 24, color: Colors.white)),
+                            Text(state.profile.email, style: const TextStyle(fontSize: 13, color: Colors.white60))
                           ]
                         ),
                       ),

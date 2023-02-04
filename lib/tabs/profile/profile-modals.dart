@@ -480,7 +480,7 @@ import '../../custom-libs/profile.api.dart';
   Widget logoutModal(context) {
     return ListTile(
             leading: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 173, 58)),
-            title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 255, 173, 58), fontSize: 18)),
+            title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 248, 145, 0), fontSize: 18)),
             trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             onTap: () => {
               showModalBottomSheet(

@@ -12,6 +12,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text('Journi 2023'),
+          bottomOpacity: 0.1,
+          backgroundColor: const Color.fromARGB(240, 19, 119, 200),
+        ),
       body: RepositoryProvider(
         create: (context) => HomeRepository(homeService: HomeService(), programService: ProgramService()),
         child: BlocProvider<HomeBloc>(
