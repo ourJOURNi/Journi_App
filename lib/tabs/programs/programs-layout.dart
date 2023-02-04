@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:layout/custom-libs/onboarding.api.dart';
 import 'package:layout/tabs/programs/bloc/programs_bloc.dart';
+import 'package:path/path.dart';
 import 'programs-toolbar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import './program-page/program-page.dart';
+import 'dart:async';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
   class ProgramsLayout extends StatelessWidget {
@@ -20,32 +25,67 @@ import 'package:skeleton_text/skeleton_text.dart';
             ? Stack(
                 children: [
                   ListView.builder(
-                    padding: const EdgeInsets.only(top: 150),
+                    padding: const EdgeInsets.only(top: 180, bottom: 50),
                     itemCount: state.programs.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 360,
-                            child: Image.asset('assets/det_skyline.jpeg'),
+                          const SizedBox(height: 20),
+                          Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage('${state.programs[index].photo}'),
+                                fit: BoxFit.cover
+                              )
+
+                            ),
                           ),
-                           ListTile(
-                            title: Text(state.programs[index].title),
-                            subtitle: Text('${state.programs[index].date}\n${state.programs[index].summary}'),
+                          const SizedBox(height: 20),
+                          Container(
+                            margin: const EdgeInsets.all(8),
+                            child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(state.programs[index].title, style: const TextStyle(fontSize: 20, color: Color.fromARGB(240, 19, 119, 200)),),
+                              Text(state.programs[index].date, style: const TextStyle(color: Colors.grey)),
+                              const SizedBox(height: 20),
+                              Text(state.programs[index].summary, style: const TextStyle(fontSize: 16)),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              const SizedBox(width: 8),
-                              TextButton(
-                                child: const Text('Sign Up'),
-                                onPressed: () {/* ... */},
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 224, 131, 0)),
+                                onPressed: () {                              
+                                    EasyLoading.showInfo('loading program...', duration: const Duration(seconds: 1))
+                                      .then((value) => {
+                                      
+                                        Timer(const Duration(seconds: 1), () => {
+                                          EasyLoading.dismiss(),
+  
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
+                                            ),
+                                          ),
+                                        })
+                                      }
+                                    );
+                                },
+                                child: const Text('View'),
                               ),
+
+                              const SizedBox(width: 16),
                             ],
                           ),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     );  

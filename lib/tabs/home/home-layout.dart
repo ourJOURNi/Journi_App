@@ -5,21 +5,55 @@ import '../../global-styles.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-
+import '../../custom-libs/onboarding.api.dart';
+import '../programs/program-page/program-page.dart';
+import 'package:video_player/video_player.dart';
 
 final Map<String, String> faqs = {
-    "Question_1": "What is this question?",
+    "What is the Front End Framework used in this app?": "Flutter! ?",
     "Question 2": "What is this question?",
     "Question 3": "What is this question?",
     "Question 4": "What is this question?",
     "Question 5": "What is this question?",
 };
 
-class HomeLayout extends StatelessWidget {
+
+class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
 
   @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+
+  void initState() {
+    super.initState();
+
+    // Create and store the VideoPlayerController. The VideoPlayerController
+    // offers several different constructors to play videos from assets, files,
+    // or the internet.
+    _controller = VideoPlayerController.asset(
+      'assets/unreal_basecamp_video_1.mp4',
+    );
+
+    _initializeVideoPlayerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
+    _controller.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _controller.setVolume(0.0);
+    _controller.play();
 
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {    
@@ -31,33 +65,68 @@ class HomeLayout extends StatelessWidget {
                  
                  // Welcome Header
                  Container(
-                  height: 350,
+                  height: 250,
                   decoration: const BoxDecoration(
                     // color: Colors.black45,
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
-                      const Text('Welcome to the App!', style: 
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: const Color.fromARGB(240, 19, 119, 200))
-                      ),
-                      const SizedBox(height: 20),
-                      Image.asset(
-                        'assets/det_skyline.jpeg',
-                        semanticLabel: "Journi Logo",
-                      ),
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          FutureBuilder(
+                            future: _initializeVideoPlayerFuture,
+                            builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              // If the VideoPlayerController has finished initialization, use
+                              // the data it provides to limit the aspect ratio of the video.
+                              return AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                // Use the VideoPlayer widget to display the video.
+                                child: VideoPlayer(_controller),
+                              );
+                            } else {
+                              // If the VideoPlayerController is still initializing, show a
+                              // loading spinner.
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 8, bottom: 8),
+                            child: Image.asset(
+                            'assets/journi_logo.png',
+                              semanticLabel: "Journi Logo",
+                              height: 20,
+                          ),
+                          )
+                      ],
+                      )
+                      // const SizedBox(height: 20),
+                      
+                      // https://docs.flutter.dev/cookbook/plugins/play-video
+                      // VideoPlayer(_videoController)
                     ],
                   ),
                   ),
 
-                 // Latest things To Do
                  Container(
-                  height: 160,
+                  height: 260,
                   alignment: Alignment.topLeft,
-                  margin: EdgeInsets.all(20),
+                  // margin: EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      const Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. '),
+                      Container(
+                        margin: const EdgeInsets.all(16),
+                        child: Column(children: const [
+                          Text('Welcome to The Journi App!', style: TextStyle(fontSize: 24, color: Color.fromARGB(240, 19, 119, 200))),
+                          SizedBox(height: 16),
+                          Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. ',
+                            style: TextStyle(fontSize: 16)),
+                        ],)
+                      ),
                       const SizedBox(height: 50),
                       // Row(children: const [
                       //   Text('Any questions or concerns?', 
@@ -71,19 +140,22 @@ class HomeLayout extends StatelessWidget {
                     ],
                   ),
                   ),
-
-                 // Latest things To Do
+                
+                 // Latest
                  Container(
-                  height: 50,
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(left: 20, top: 20),
-                  child: const Text('Latest Things To Do', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
+                  height: 80,
+                  alignment: Alignment.topLeft,decoration: const BoxDecoration(
+                    color: Color(0xFFF1F1F1)
+                  ),
+                  padding: const EdgeInsets.only(left: 20, top: 40),
+                  child: const Text('Latest Things To Do', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                   ),
 
-                // 5 closest Programs to current date
-                 Container(
-                  height: 400,
+                 // 5 closest Programs to current date
+                  Container(
+                  height: 550,
                   decoration: const BoxDecoration(
+                    color: Color(0xFFF1F1F1)
                   ),
                   child: ListView.builder(
                     // This next line does the trick.
@@ -91,29 +163,45 @@ class HomeLayout extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
                      return Container(
-                       margin: EdgeInsets.only(right: 10),
+                       margin: const EdgeInsets.only(right: 10),
                         width: MediaQuery.of(context).size.width - 40,
                         child: Column(
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(
-                            'assets/det_skyline.jpeg',
-                              semanticLabel: "Journi Logo",
+                            Container(
+                              height: 300,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                   image: NetworkImage(state.programs[index].photo),
+                                   fit: BoxFit.cover
+                                 )
+
+                              ),
                             ),
 
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Container(
+                              margin: const EdgeInsets.all(8),
                               child: Column(
                                 children: [
-                                  Text('${state.programs[index].title}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                  Text('${state.programs[index].summary}',  style: TextStyle(fontSize: 16)),
+                                  Text(state.programs[index].title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(240, 19, 119, 200))),
+                                  const SizedBox(height: 16),
+                                  Text(state.programs[index].summary,  style: const TextStyle(fontSize: 14)),
                                   // Text('${state.programs[index].date}', style: TextStyle(fontSize: 14)),
                                 ],
                               ),
                             ),
 
-                            SizedBox(height: 16),
-                            ElevatedButton(onPressed: null, child: Text('Tap'))
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 224, 131, 0)),
+                              onPressed: () => {
+                              Navigator.of(context).push(
+                                 MaterialPageRoute(
+                                   builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
+                                 ),
+                               )
+                            }, child: Text('Tap'))
                           ],
                         ),
                       );
@@ -122,19 +210,18 @@ class HomeLayout extends StatelessWidget {
                   ),
                 ),
 
-                Container(
+                  // Photos
+                  // 1000x850
+                  Container(
                   height: 50,
                   alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(left: 20, top: 20),
-                  child: const Text('Photos', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
-                ),
-
-                 // Photos
-                 Container(
-                  height: 280,
-                  decoration: const BoxDecoration(
-                    // color: Colors.black54,
+                  margin: const EdgeInsets.only(left: 20, top: 20),
+                  child: const Text('Photos', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                   ),
+
+                  Container(
+                  height: 340,
+                  decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   child: ListView(
                     // This next line does the trick.
                     scrollDirection: Axis.horizontal,
@@ -143,78 +230,110 @@ class HomeLayout extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
-                          textDirection: TextDirection.ltr,
+                        child: Stack(
+                          // alignment: Alignment.bottomRight,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_1.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_2.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_3.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_4.png',
                               semanticLabel: "Journi Logo",
                             ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
+                        child: Stack(
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_5.png',
                               semanticLabel: "Journi Logo",
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 8),
-                        width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
-                          textDirection: TextDirection.ltr,
-                          children: [
-                            Image.asset(
-                            'assets/det_skyline.jpeg',
-                              semanticLabel: "Journi Logo",
-                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              margin: const EdgeInsets.only(right: 8, bottom: 40),
+                              child: Image.asset(
+                              'assets/journi_logo.png',
+                                semanticLabel: "Journi Logo",
+                                height: 20,
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -223,18 +342,18 @@ class HomeLayout extends StatelessWidget {
                   )
                 ),
 
-                 // FAQ
-                 Container(
-                  height: 400,
-                  decoration: const BoxDecoration(
+                  // FAQ
+                  Container(
+                    height: 650,
+                    decoration: const BoxDecoration(
                     // color: Colors.black,
                   ),
-                  child: Column(
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         margin: const EdgeInsets.all(16),
-                        child: Text('FAQs', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
+                        child: const Text('FAQs', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                       ),
                       Accordion(
                         maxOpenSections: 1,
@@ -251,9 +370,9 @@ class HomeLayout extends StatelessWidget {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_1', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is Journi?', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('We are a non-profit organization dedicated to equipping communities with the skills and know-how to jump start local economies; to allow those communities to become globally competitive.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),
@@ -263,9 +382,9 @@ class HomeLayout extends StatelessWidget {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_2', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is the Front End Tech used in this app?', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('This app was built with Flutter, an open source framework by Google for building, natively compiled, multi-platform applications from a single codebase. In other words, this app can be built to be displayed on an iPhone, an Android, a Web Browser, and even apps for TVs. \n\nFlutter uses the language Dart, another open source project from Google. Dart is Object Oriented, designed for client side development,  and can be used in Mobile Apps, Web Apps, etc.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),
@@ -275,34 +394,9 @@ class HomeLayout extends StatelessWidget {
                             isOpen: true,
                             leftIcon: const Icon(Icons.add, color: Colors.white),
                             headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_3', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
-                            contentHorizontalPadding: 20,
-                            contentBorderWidth: 1,
-                            // onOpenSection: () => print('onOpenSection ...'),
-                            // onCloseSection: () => print('onCloseSection ...'),
-                          ),
-                          AccordionSection(
-                            isOpen: true,
-                            leftIcon: const Icon(Icons.add, color: Colors.white),
-                            
-                            headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_4', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
-                            contentHorizontalPadding: 20,
-                            contentBorderWidth: 1,
-                            // onOpenSection: () => print('onOpenSection ...'),
-                            // onCloseSection: () => print('onCloseSection ...'),
-                          ),
-                          AccordionSection(
-                            isOpen: true,
-                            leftIcon: const Icon(Icons.add, color: Colors.white),
-                            headerBackgroundColor: Color.fromARGB(240, 19, 119, 200),
-                            headerBackgroundColorOpened: const Color.fromARGB(255, 255, 173, 58),
-                            header: Text('Question_5', style:  TextStyle(color: Colors.white, fontSize: 17),),
-                            content: Text('What is this question?'),
+                            headerBackgroundColorOpened: Color.fromARGB(255, 218, 127, 0),
+                            header: Text('What is the Back End Tech used in this app', style:  TextStyle(color: Colors.white, fontSize: 17),),
+                            content: Text('On the server side, this is a NodeJS application. Node.js is a cross-platform, open-source server environment that can run on Windows, Linux, Unix, macOS, and more. Node.js is a back-end JavaScript runtime environment, runs on the V8 JavaScript Engine, and executes JavaScript code outside a web browser. \n\nInstead of being written in JavaScript, this server is written in TypeScript for better performance. TypeScript is a free and open source high-level programming language developed and maintained by Microsoft. It is a strict syntactical superset of JavaScript and adds optional static typing to the language. It is designed for the development of large applications and transpiles to JavaScript.'),
                             contentHorizontalPadding: 20,
                             contentBorderWidth: 1,
                             // onOpenSection: () => print('onOpenSection ...'),
@@ -313,7 +407,7 @@ class HomeLayout extends StatelessWidget {
                        )
                     ],
                   ),
-                )
+                  )
                 ],
               ) : state.status.isLoading 
                   ? ListView.builder(

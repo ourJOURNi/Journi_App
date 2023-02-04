@@ -12,6 +12,7 @@ Program _$ProgramFromJson(Map<String, dynamic> json) => Program(
       date: json['date'] as String,
       summary: json['summary'] as String,
       details: json['details'] as String,
+      photo: json['photo'] as String,
     );
 
 Map<String, dynamic> _$ProgramToJson(Program instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$ProgramToJson(Program instance) => <String, dynamic>{
       'date': instance.date,
       'summary': instance.summary,
       'details': instance.details,
+      'photo': instance.photo,
     };

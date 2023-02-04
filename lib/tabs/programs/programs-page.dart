@@ -8,7 +8,9 @@ import '../programs/programs-layout.dart';
 
 
 class ProgramsPage extends StatelessWidget {
-  const ProgramsPage({super.key});
+  const ProgramsPage({super.key, required this.email});
+
+  final String email;
 
   @override
   Widget build(BuildContext context) {

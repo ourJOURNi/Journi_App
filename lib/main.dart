@@ -1,5 +1,6 @@
 // Flutter Splash Screen Docs @ https://docs.flutter.dev/development/ui/advanced/splash-screen
 import 'package:flutter/material.dart';
+import 'package:layout/custom-libs/camera.dart';
 import 'package:layout/tabs/programs/programs-page.dart';
 import './tabs/home/home-page.dart';
 import 'tabs/profile/profile-page.dart';
@@ -33,16 +34,21 @@ class _RootWidgetState extends State<RootWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
         builder: EasyLoading.init(),
-        home: const Scaffold(
+        home: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: const Scaffold(
           body: LoginPage(),
+        ),
         ),
       );
   }
 }
 
+
 class Tabs extends StatefulWidget {
-  const Tabs({super.key, required String email}) : email = '';
-  final String email;
+  const Tabs({super.key, required String email});
 
   @override
   State<Tabs> createState() => _TabsState();
@@ -52,11 +58,11 @@ class _TabsState extends State<Tabs> {
   // 0 = Home
   // 1 = Programs
   // 2 = Profile
-  int _selectedIndex = 0;
+  static int _selectedIndex = 0;
   
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
-    const ProgramsPage(),
+    ProgramsPage(email: userEmail),
     const ProfilePage(),
   ];
 

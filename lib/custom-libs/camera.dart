@@ -1,38 +1,73 @@
-import 'package:camera/camera.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'dart:io';
 
-var userCamera = CameraController(
-    const CameraDescription(
-      lensDirection: CameraLensDirection.front,
-      name: "",
-      sensorOrientation: 0,
-    ), 
-    ResolutionPreset.max, 
-    imageFormatGroup: ImageFormatGroup.yuv420
-  );
+proPicGallery() async {
 
-getCamera() async {
-  print("Getting Camera");
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
+  // Get Image from Image Pick
+  final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if(image == null) return XFile('');
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
+  // Crop Image File 
+  final croppedFile = await ImageCropper()
+    .cropImage(
+      sourcePath: image.path,
+      aspectRatio: const CropAspectRatio(
+        ratioX: 100.0, 
+        ratioY: 100.0,
+      ),
+      uiSettings: [
+        IOSUiSettings(
+          title: 'Start cropping by touching the screen',
+          resetButtonHidden: true,
+          aspectRatioPickerButtonHidden: true,
+          rotateButtonsHidden: true,
+          aspectRatioLockEnabled: true
+        ),
+       AndroidUiSettings(
+         lockAspectRatio: true,
+         initAspectRatio: CropAspectRatioPreset.square,
+         hideBottomControls: true
+       ) 
+      ]
+    );
 
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
+  if(croppedFile == null) return XFile(''); 
 
-  userCamera = CameraController(
-    firstCamera, 
-    ResolutionPreset.max, 
-    imageFormatGroup: ImageFormatGroup.yuv420
-  );
-  await userCamera.initialize();
-  // userCamera.startVideoRecording();
+  return File(croppedFile.path);
+} 
 
-  print(firstCamera);
-  print("\n");
-}
+proPicCamera() async {
+  print('Attempting to get user Sign Up Profile Picture');
+  final image = await ImagePicker().pickImage(source: ImageSource.camera);
+
+
+  if(image == null) return XFile('');
+
+  // Crop Image File 
+  final croppedFile = await ImageCropper()
+    .cropImage(
+      sourcePath: image.path,
+      aspectRatio: const CropAspectRatio(
+        ratioX: 100.0, 
+        ratioY: 100.0,
+      ),
+      uiSettings: [
+        IOSUiSettings(
+          title: 'Start cropping by touching the screen',
+          resetButtonHidden: true,
+          aspectRatioPickerButtonHidden: true,
+          rotateButtonsHidden: true,
+          aspectRatioLockEnabled: true
+        ),
+       AndroidUiSettings(
+         lockAspectRatio: true,
+         initAspectRatio: CropAspectRatioPreset.square,
+         hideBottomControls: true
+       ) 
+      ]
+    );
+
+  if(croppedFile == null) return XFile(''); 
+  return File(croppedFile.path);
+} 
