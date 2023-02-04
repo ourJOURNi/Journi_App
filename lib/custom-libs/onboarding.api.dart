@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -7,8 +9,6 @@ import '../login/register-page.dart';
 import 'snackbars.dart';
 import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import '../repository/models/profile.dart';
-import '../tabs/profile/bloc/profile_bloc.dart';
 
 void configLoginLoading() {
   EasyLoading.instance
@@ -109,6 +109,7 @@ Future<void> register(
   String lastName, 
   String email, 
   String password, 
+  String profilePicture,
   BuildContext context, 
   TextEditingController firstNameCTRL,
   TextEditingController lastNameCTRL,

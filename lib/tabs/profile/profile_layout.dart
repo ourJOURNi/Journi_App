@@ -15,30 +15,49 @@ import 'package:skeleton_text/skeleton_text.dart';
         builder: (blocContext, state) {
           return state.status.isSuccess
             ? Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+                shadowColor: Colors.transparent,
+              ),
               body: ListView(
-               padding: const EdgeInsets.all(20),
                children: [ 
-                Column(
-                   children: [
-                     // const Text('Journi Profile', style: profileNameHeaderStyle),
-                       // Logo
-                       Container(
-                         height: 40,
-                         margin: const EdgeInsets.only(bottom: 50, top: 50),
-                         child: Image.asset(
-                           'assets/journi_logo.png',
-                           semanticLabel: "Journi Logo",
-                         ),
-                       ),
-                     transparentDivider,
-                  ],
+                
+                Container(
+                  color: const Color.fromARGB(255, 240, 240, 240),
+                  height: 250,
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(120)),
+                        child: CircleAvatar(
+                        radius: 75,
+                        backgroundImage: AssetImage('assets/fbs-eddie.png')
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        // decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${state.profile.firstName} ${state.profile.lastName}', style: const TextStyle(fontSize: 24, color: Color.fromARGB(240, 19, 119, 200))),
+                            Text(state.profile.email, style: const TextStyle(fontSize: 13, color: Colors.grey))
+                          ]
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(state.profile.email),
-                Text(state.profile.firstName),
-                Text(state.profile.lastName),
-                Text(state.profile.dateRegistered),
-                transparentDivider,
-                transparentDivider,
+                const SizedBox(height: 20),
                 updatePhotoModal(context, blocContext),
                 updateNameModal(context, blocContext, state.profile.email, state.profile.firstName, state.profile.lastName),
                 updateEmailModal(context, state, state.profile.email),

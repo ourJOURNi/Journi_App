@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'dart:io';
 import '../global-styles.dart';
 import '../custom-libs/onboarding.api.dart';
 import '../custom-libs/camera.dart';
+
 
 String firstName = "";
 String lastName = "";
 String email = "";
 String password = "";
+File profilePicture = File('');
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -23,6 +27,17 @@ class _RegisterFormState extends State<RegisterForm> {
   final emailCTRL = TextEditingController();
   final passwordCTRL = TextEditingController();
   int _index = 0;
+  bool gotPhoto = false;
+  File photoFile = File('');
+
+  updatePhoto(File file) {
+    print(file);
+    setState(() {
+      gotPhoto = true;
+      profilePicture = file;
+      print(profilePicture);
+    });
+  }
 
   @override 
   Widget build(BuildContext context) {
@@ -35,7 +50,7 @@ class _RegisterFormState extends State<RegisterForm> {
       controller: controller,
       children: <Widget>[
 
-        // Page 1
+        // Page 1 - Personal Info
         Center(
           child: Form(
             key: _infoFormKey,
@@ -46,13 +61,15 @@ class _RegisterFormState extends State<RegisterForm> {
                 Padding(
                   padding: inputPadding,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
-                    SizedBox(width: 4),
-                    CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,),
-                    SizedBox(width: 4),
-                    CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,)
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      Text('Personal Info', style: TextStyle(fontSize: 18)),
+                      Expanded( child: Divider(height: 0, color: Colors.transparent)),
+                      CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                      SizedBox(width: 4),
+                      CircleAvatar(backgroundColor: Colors.grey, radius: 4,),
+                      SizedBox(width: 4),
+                      CircleAvatar(backgroundColor: Colors.grey, radius: 4,)
                   ],)
                 ),
                 verticalInputDivider,
@@ -133,52 +150,78 @@ class _RegisterFormState extends State<RegisterForm> {
             )
           ),
         
-        // Page 2
+        // Page 2 - Profile Picture
         Center(
           child: Column(
             children: [
               verticalInputDivider,
+              // Pagination
               Padding(
                 padding: inputPadding,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                  Text('Profile Picture', style: TextStyle(fontSize: 18)),
+                  Expanded( child: Divider(height: 0, color: Colors.transparent)),
                   CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
                   SizedBox(width: 4),
                   CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
                   SizedBox(width: 4),
-                  CircleAvatar(backgroundColor: Colors.grey[400], radius: 4,)
+                  CircleAvatar(backgroundColor: Colors.grey, radius: 4,)
                 ],)
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
+              
+              // Photo
               Center(
                 child: Padding(
                   padding: inputPadding,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.blueGrey,
-                  )
+                  child: Container(
+                    child: gotPhoto ? 
+                      CircleAvatar(
+                        radius: 75,
+                        backgroundImage: AssetImage(photoFile.path)
+                        ) 
+                      : CircleAvatar(
+                        radius: 75,
+                        backgroundImage: AssetImage('assets/def_profile_pic.jpeg')
+                        )
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 40),
               Column(
                 children: [
+                  // From Photo Gallery
                   ElevatedButton(
                     style: buttonBlueStyle,
-                    onPressed: () => {
+                    onPressed: () async => {
                       print('Tapped Get Profile Picture Button from Register Page'),
-                      proPicGallery()
+                      
+                      // Get file
+                      photoFile = await proPicGallery(),
+
+                      // Pass in Image File
+                      updatePhoto(photoFile)
                     }, 
-                    child: Text('Get from Photo Gallery')
+                    child: const Text('Get from Photo Gallery')
                   ),
+                  // From Camera
                   ElevatedButton(
                     style: buttonBlueStyle,
-                    onPressed: () => {
+                    onPressed: () async => {
                       print('Tapped Get Profile Picture Button from Register Page'),
-                      proPicCamera()
+                      // Get file
+                      photoFile = await proPicCamera(),
+
+                      // Pass in Image File
+                      updatePhoto(photoFile)
                     }, 
                     child: Text('Get from Camera')
                   ),
+                  const SizedBox(height: 40),
+                  
+                  // Next
                   ElevatedButton(
                     style: buttonGreenStyle,
                     onPressed: () => {
@@ -186,7 +229,8 @@ class _RegisterFormState extends State<RegisterForm> {
                     }, 
                     child: Text('Next')
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+                  // Back & Skip Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -208,11 +252,12 @@ class _RegisterFormState extends State<RegisterForm> {
                   )
                 ],
               )
+            
             ],
           ),
         ),
         
-        // Page 3
+        // Page 3 - Password
         Center(
           child: Column(
             children: [
@@ -221,15 +266,17 @@ class _RegisterFormState extends State<RegisterForm> {
                 padding: inputPadding,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
-                  SizedBox(width: 4),
-                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
-                  SizedBox(width: 4),
-                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,)
+                  children: const [
+                    Text('Personal Info', style: TextStyle(fontSize: 18)),
+                    Expanded( child: Divider(height: 0, color: Colors.transparent)),
+                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,)
                 ],)
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               Padding(
                   padding: inputPadding,
                   child: 
@@ -251,10 +298,10 @@ class _RegisterFormState extends State<RegisterForm> {
                       },
                     ),
                 ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () => {
-                  register(firstName, lastName, email, password, context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
+                  register(firstName, lastName, email, password, 'profilePicture', context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
                   .then((value) => {
                     firstName = "",
                     lastName = "",
@@ -275,7 +322,6 @@ class _RegisterFormState extends State<RegisterForm> {
           )
         ),
       ],
-    );
-    
+    ); 
   }
 }

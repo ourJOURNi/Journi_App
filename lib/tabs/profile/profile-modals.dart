@@ -5,7 +5,8 @@ import '../../custom-libs/profile.api.dart';
   Widget updatePhotoModal(context, blocContext) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
-            leading: const Icon(Icons.camera_alt),
+            leading: const Icon(Icons.camera_alt, color: Color.fromARGB(129, 82, 163, 255)),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             title: const Text('Update Profile Picture'),
             onTap: () => {
               showModalBottomSheet(
@@ -112,7 +113,8 @@ import '../../custom-libs/profile.api.dart';
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return 
           ListTile(
-            leading: const Icon(Icons.info),
+            leading: const Icon(Icons.info, color: Color.fromARGB(129, 82, 163, 255)),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             title: const Text('Update Name'),
             onTap: () => {
               showModalBottomSheet(
@@ -120,7 +122,7 @@ import '../../custom-libs/profile.api.dart';
                 context: context, 
                 builder: (BuildContext context) {
                     return Center(
-                      heightFactor: 100.0,
+                      heightFactor: 90.0,
                       child: Column(
                         children: <Widget> [
                           const Padding(
@@ -130,9 +132,9 @@ import '../../custom-libs/profile.api.dart';
                                 fontSize: 25,
                               ),),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text('Full Name', style: modalHeaderStyle)),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text('$currentFirstName $currentLastName', style: modalHeaderStyle)),
                           Padding(
                             padding: modalInputPadding,
                             child: Form(
@@ -148,9 +150,10 @@ import '../../custom-libs/profile.api.dart';
                                       newFirstName = text,
                                       print(newFirstName),
                                     },
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: currentFirstName,
+                                      // focusColor: Color.fromARGB(240, 19, 119, 200),
+                                      hintText: 'First name',
                                     ),
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
@@ -168,9 +171,9 @@ import '../../custom-libs/profile.api.dart';
                                       newLastName = text,
                                       print(newLastName),
                                     },
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: currentLastName,
+                                      hintText: 'Last Name',
                                     ),
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
@@ -254,8 +257,9 @@ import '../../custom-libs/profile.api.dart';
   Widget updateEmailModal(context, state, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
-            leading: const Icon(Icons.email),
+            leading: const Icon(Icons.email, color: Color.fromARGB(129, 82, 163, 255)),
             title: const Text('Update Email'),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             onTap: () => {
               showModalBottomSheet(
                 isScrollControlled: true,
@@ -375,8 +379,9 @@ import '../../custom-libs/profile.api.dart';
   Widget updatePasswordModal(context, blocContext, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
-            leading: const Icon(Icons.email),
+            leading: const Icon(Icons.lock, color: Color.fromARGB(129, 82, 163, 255)),
             title: const Text('Update Password'),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             onTap: () => {
               showModalBottomSheet(
                 isScrollControlled: true,
@@ -474,8 +479,9 @@ import '../../custom-libs/profile.api.dart';
   
   Widget logoutModal(context) {
     return ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red,),
-            title: const Text('Logout', style: logoutStyle,),
+            leading: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 173, 58)),
+            title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 255, 173, 58), fontSize: 18)),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             onTap: () => {
               showModalBottomSheet(
                 context: context, 

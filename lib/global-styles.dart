@@ -9,7 +9,7 @@ const Expanded expandedBottomOfPageDivider =  Expanded( child: Divider(height: 0
 
 // Modal Styles 
 const modalInputPadding = EdgeInsets.all(50.0);
-const modalHeaderStyle = TextStyle(color: Colors.red, fontSize: 20);
+const modalHeaderStyle = TextStyle(color: Color.fromARGB(255, 255, 173, 58), fontSize: 20);
 ButtonStyle modalButtonStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(
     fontSize: 15,
@@ -27,7 +27,7 @@ ButtonStyle modalButtonCancelStyle = ElevatedButton.styleFrom(
 );
 
 // Button Styles
-const buttonSize = Size(170.0, 40.0);
+const buttonSize = Size(200.0, 40.0);
 ButtonStyle buttonBlueStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(
     fontSize: 15,

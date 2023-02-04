@@ -7,21 +7,53 @@ import 'package:accordion/controllers.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import '../../custom-libs/onboarding.api.dart';
 import '../programs/program-page/program-page.dart';
-
+import 'package:video_player/video_player.dart';
 
 final Map<String, String> faqs = {
-    "Question_1": "What is this question?",
+    "What is the Front End Framework used in this app?": "Flutter! ?",
     "Question 2": "What is this question?",
     "Question 3": "What is this question?",
     "Question 4": "What is this question?",
     "Question 5": "What is this question?",
 };
 
-class HomeLayout extends StatelessWidget {
+
+class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
 
   @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+
+  void initState() {
+    super.initState();
+
+    // Create and store the VideoPlayerController. The VideoPlayerController
+    // offers several different constructors to play videos from assets, files,
+    // or the internet.
+    _controller = VideoPlayerController.asset(
+      'assets/unreal_basecamp_video_1.mp4',
+    );
+
+    _initializeVideoPlayerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
+    _controller.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _controller.setVolume(0.0);
+    _controller.play();
 
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {    
@@ -33,38 +65,67 @@ class HomeLayout extends StatelessWidget {
                  
                  // Welcome Header
                  Container(
-                  height: 350,
+                  height: 250,
                   decoration: const BoxDecoration(
                     // color: Colors.black45,
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
-                      Image.asset(
-                        'assets/journi_logo.png',
-                          semanticLabel: "Journi Logo",
-                          height: 50,
-                        ),
-                      const SizedBox(height: 20),
-                      Image.asset(
-                        'assets/det_skyline.jpeg',
-                        semanticLabel: "Journi Logo",
-                      ),
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          FutureBuilder(
+                            future: _initializeVideoPlayerFuture,
+                            builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              // If the VideoPlayerController has finished initialization, use
+                              // the data it provides to limit the aspect ratio of the video.
+                              return AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                // Use the VideoPlayer widget to display the video.
+                                child: VideoPlayer(_controller),
+                              );
+                            } else {
+                              // If the VideoPlayerController is still initializing, show a
+                              // loading spinner.
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 8, bottom: 8),
+                            child: Image.asset(
+                            'assets/journi_logo.png',
+                              semanticLabel: "Journi Logo",
+                              height: 20,
+                          ),
+                          )
+                      ],
+                      )
+                      // const SizedBox(height: 20),
+                      
+                      // https://docs.flutter.dev/cookbook/plugins/play-video
+                      // VideoPlayer(_videoController)
                     ],
                   ),
                   ),
 
                  Container(
-                  height: 205,
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
+                  height: 260,
                   alignment: Alignment.topLeft,
                   // margin: EdgeInsets.all(20),
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 20, left: 20), 
-                        child: const Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. ',
-                        style: TextStyle(fontSize: 16))
+                        margin: const EdgeInsets.all(16),
+                        child: Column(children: const [
+                          Text('Welcome to The Journi App!', style: TextStyle(fontSize: 24, color: Color.fromARGB(240, 19, 119, 200))),
+                          SizedBox(height: 16),
+                          Text('This app is for demo purposes only. This is a home page dedicated to whatever needs your business logic needs. It is intended to capture and anticipate the most frequent things a user does in a given app, and places them all in one place so that many of the apps features are more accessible. ',
+                            style: TextStyle(fontSize: 16)),
+                        ],)
                       ),
                       const SizedBox(height: 50),
                       // Row(children: const [
@@ -82,45 +143,59 @@ class HomeLayout extends StatelessWidget {
                 
                  // Latest
                  Container(
-                  height: 50,
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(left: 20, top: 20),
-                  child: const Text('Latest Things To Do', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
+                  height: 80,
+                  alignment: Alignment.topLeft,decoration: const BoxDecoration(
+                    color: Color(0xFFF1F1F1)
+                  ),
+                  padding: const EdgeInsets.only(left: 20, top: 40),
+                  child: const Text('Latest Things To Do', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                   ),
 
                  // 5 closest Programs to current date
                   Container(
-                  height: 400,
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
+                  height: 550,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F1F1)
+                  ),
                   child: ListView.builder(
                     // This next line does the trick.
                     scrollDirection: Axis.horizontal,
                     itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
                      return Container(
-                       margin: EdgeInsets.only(right: 10),
+                       margin: const EdgeInsets.only(right: 10),
                         width: MediaQuery.of(context).size.width - 40,
                         child: Column(
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(
-                            'assets/det_skyline.jpeg',
-                              semanticLabel: "Journi Logo",
+                            Container(
+                              height: 300,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                   image: NetworkImage(state.programs[index].photo),
+                                   fit: BoxFit.cover
+                                 )
+
+                              ),
                             ),
 
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Container(
+                              margin: const EdgeInsets.all(8),
                               child: Column(
                                 children: [
-                                  Text('${state.programs[index].title}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                  Text('${state.programs[index].summary}',  style: TextStyle(fontSize: 16)),
+                                  Text(state.programs[index].title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(240, 19, 119, 200))),
+                                  const SizedBox(height: 16),
+                                  Text(state.programs[index].summary,  style: const TextStyle(fontSize: 14)),
                                   // Text('${state.programs[index].date}', style: TextStyle(fontSize: 14)),
                                 ],
                               ),
                             ),
 
-                            SizedBox(height: 16),
-                            ElevatedButton(onPressed: () => {
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 224, 131, 0)),
+                              onPressed: () => {
                               Navigator.of(context).push(
                                  MaterialPageRoute(
                                    builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
@@ -136,16 +211,17 @@ class HomeLayout extends StatelessWidget {
                 ),
 
                   // Photos
+                  // 1000x850
                   Container(
                   height: 50,
                   alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(left: 20, top: 20),
-                  child: const Text('Photos', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
+                  margin: const EdgeInsets.only(left: 20, top: 20),
+                  child: const Text('Photos', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                   ),
 
                   Container(
                   height: 380,
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
+                  decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black12))),
                   child: ListView(
                     // This next line does the trick.
                     scrollDirection: Axis.horizontal,
@@ -158,7 +234,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/KAR09930.jpg',
+                            'assets/demo_photo_1.png',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -171,7 +247,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/journi_pic_3.jpeg',
+                            'assets/demo_photo_2.png',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -184,7 +260,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/journi_pic_2.jpeg',
+                            'assets/demo_photo_3.png',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -197,7 +273,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/journi_pic_1.jpeg',
+                            'assets/demo_photo_4.png',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -210,20 +286,7 @@ class HomeLayout extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                           children: [
                             Image.asset(
-                            'assets/KAR09893.jpg',
-                              semanticLabel: "Journi Logo",
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 8),
-                        width: MediaQuery.of(context).size.width - 20,
-                        child: Column(
-                          textDirection: TextDirection.ltr,
-                          children: [
-                            Image.asset(
-                            'assets/det_skyline.jpeg',
+                            'assets/demo_photo_5.png',
                               semanticLabel: "Journi Logo",
                             ),
                           ],
@@ -245,7 +308,7 @@ class HomeLayout extends StatelessWidget {
                     children: [
                       Container(
                         margin: const EdgeInsets.all(16),
-                        child: Text('FAQs', style: TextStyle(fontSize: 20, color: const Color.fromARGB(240, 19, 119, 200))),
+                        child: const Text('FAQs', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 224, 131, 0))),
                       ),
                       Accordion(
                         maxOpenSections: 1,
