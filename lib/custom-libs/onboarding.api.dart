@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -9,6 +9,8 @@ import '../login/register-page.dart';
 import 'snackbars.dart';
 import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+String baseURL = dotenv.env['IP']!;
 
 void configLoginLoading() {
   EasyLoading.instance
@@ -52,7 +54,7 @@ Future<void> login(
   TextEditingController emailCTRL,
   TextEditingController passwordCTRL,
   ) async {
-    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/login-profile');
+    final Uri url = Uri.http(baseURL, '/api/profile/login-profile');
     final Map<String, String> customHeaders = {"content-type": "application/json" };
 
     print('Attempting to login');
@@ -116,7 +118,7 @@ Future<void> register(
   TextEditingController emailCTRL,
   TextEditingController passwordCTRL
   ) async {
-    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/register-profile');
+    final Uri url = Uri.http(baseURL, '/api/profile/register-profile');
     final Map<String, String> customHeaders = {"content-type": "application/json" };
 
     await http.post(
@@ -151,7 +153,7 @@ Future<void> register(
 }
 
 Future<void> sendRegisterCode(String email, String code, BuildContext context) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/send-register-code');
+  final Uri url = Uri.http(baseURL, '/api/profile/send-register-code');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
   
   await http.post(
@@ -167,7 +169,7 @@ Future<void> sendRegisterCode(String email, String code, BuildContext context) a
  }
 
 Future<void> changeEmail(String email, String newEmail, String password) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-email');
+  final Uri url = Uri.http(baseURL, '/api/profile/update-email');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   

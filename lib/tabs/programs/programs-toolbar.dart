@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -32,7 +33,50 @@ class ProgramsToolbarWidget extends StatefulWidget {
 
 class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
   String category = 'All';
+  bool searchEmpty = false;
+  List<Program> allPrograms = [];
+  TextEditingController searchInputCTRL = TextEditingController();
 
+  void sortProgramsByFurthestDate() {
+    setState(() => {
+      EasyLoading.instance
+        ..displayDuration = const Duration(milliseconds: 2000)
+        ..indicatorType = EasyLoadingIndicatorType.wave
+        ..loadingStyle = EasyLoadingStyle.dark
+        ..indicatorSize = 45.0
+        ..radius = 10.0
+        ..progressColor = Colors.yellow
+        ..backgroundColor = Colors.green
+        ..indicatorColor = Colors.yellow
+        ..textColor = Colors.yellow
+        ..maskColor = Colors.blue.withOpacity(0.5)
+        ..userInteractions = true
+        ..dismissOnTap = true,
+      EasyLoading.show(status: 'Furthest Date'),
+      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: true)}),
+      context.read<ProgramsBloc>().add(SortProgramsByFurthest())
+    });
+  }
+  void sortProgramsBySoonestDate() {
+    setState(() => {
+      EasyLoading.instance
+        ..displayDuration = const Duration(milliseconds: 2000)
+        ..indicatorType = EasyLoadingIndicatorType.wave
+        ..loadingStyle = EasyLoadingStyle.dark
+        ..indicatorSize = 45.0
+        ..radius = 10.0
+        ..progressColor = Colors.yellow
+        ..backgroundColor = Colors.green
+        ..indicatorColor = Colors.yellow
+        ..textColor = Colors.yellow
+        ..maskColor = Colors.blue.withOpacity(0.5)
+        ..userInteractions = true
+        ..dismissOnTap = true,
+      EasyLoading.show(status: 'Soonest Date'),
+      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: true)}),
+      context.read<ProgramsBloc>().add(SortProgramsBySoonest())
+    });
+  }
   void toolbarFocus(String category) {
     setState(() => {
       this.category = category,
@@ -51,19 +95,16 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
         ..userInteractions = true
         ..dismissOnTap = true,
       EasyLoading.show(status: 'Searching: $category'),
-      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: true)})
+      Timer(const Duration(seconds: 2), () => { EasyLoading.dismiss(animation: true)}),
       });
   }
 
-  List<Program> allPrograms = [];
-  bool searchEmpty = false;
-  TextEditingController searchInputCTRL = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProgramsBloc, ProgramsState>(
       listener: (context, state) => {
-        allPrograms = context.read<ProgramsBloc>().state.programs
+        allPrograms = context.read<ProgramsBloc>().state.programs,
       },
       child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -168,21 +209,25 @@ class _ProgramsToolbarState extends State<ProgramsToolbarWidget> {
                                                 ),
                                                 ElevatedButton(
                                                   onPressed: () => {
-                                                    print('Favorites button')
+                                                    print('Favorites button'),
+                                                    sortProgramsByFurthestDate(),
+                                                    Navigator.pop(context)
                                                   },
                                                   style: ElevatedButton.styleFrom(
                                                     fixedSize: Size(40,20)
                                                   ),
-                                                  child: Center(child: Text('Entry A')),
+                                                  child: const Center(child: Text('Sort by furthest Programs')),
                                                 ),
                                                 ElevatedButton(
                                                   onPressed: () => {
-                                                    print('Favorites button')
+                                                    print('Favorites button'),
+                                                    sortProgramsBySoonestDate(),
+                                                    Navigator.pop(context)
                                                   },
                                                   style: ElevatedButton.styleFrom(
                                                     fixedSize: Size(0,0)
                                                   ),
-                                                  child: Center(child: Text('Entry A')),
+                                                  child: const Center(child: Text('Sort by soonest Programs')),
                                                 ),
                                               ],
                                             )

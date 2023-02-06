@@ -1,12 +1,12 @@
 // Flutter Splash Screen Docs @ https://docs.flutter.dev/development/ui/advanced/splash-screen
 import 'package:flutter/material.dart';
-import 'package:layout/custom-libs/camera.dart';
 import 'package:layout/tabs/programs/programs-page.dart';
 import './tabs/home/home-page.dart';
 import 'tabs/profile/profile-page.dart';
 import 'login/login-page.dart';
 import 'custom-libs/onboarding.api.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 logout() {
   return const MaterialApp(
@@ -16,8 +16,9 @@ logout() {
       );
 }
 
-void main() => {
+void main() async => {
   configLoginLoading(),
+  await dotenv.load(fileName: ".env"),
   runApp(const RootWidget())
 };
 

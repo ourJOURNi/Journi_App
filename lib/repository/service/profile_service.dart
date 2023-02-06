@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import '../models/model_barrel.dart';
 import '../models/result_error.dart';
+import '../../login/login-page.dart';
 
 class ProfileService {
   ProfileService({
@@ -18,7 +19,7 @@ class ProfileService {
 
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
-  Future<Profile> getProfile(String email) async {
+  Future<Profile> getProfile(email) async {
     print('$email from getProfile() in Profile Service');
 
     final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/get-user-profile');
@@ -43,8 +44,8 @@ class ProfileService {
       throw ErrorGettingProfiles('Error getting profile info');
     }
   }
-  Future<List<Program>> getFavoritePrograms(String email) async {
-    print('$email from getFavoritePrograms() in Profile Service');
+  Future<List<Program>> getFavoritePrograms(email) async {
+    print('$loginEmail from getFavoritePrograms() in Profile Service');
     final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/get-favorite-programs');
     final response = await _httpClient.post(
       url,
@@ -58,10 +59,12 @@ class ProfileService {
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
           return List<Program>.from(
-          json.decode(response.body).map(
-                (data) => Program.fromJson(data),
+          json.decode(jsonResponse).map(
+                (data) => {
+                  Program.fromJson(data),
+                }
               ),
-          );;
+          );
 
       } else {
         throw ErrorEmptyResponse();

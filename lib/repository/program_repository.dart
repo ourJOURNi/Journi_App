@@ -13,5 +13,5 @@ class ProgramRepository {
   final ProfileService profileService;
 
   Future<List<Program>> getPrograms() async => programService.getPrograms();
-  Future<List<Program>> getFavoritePrograms() async => profileService.getFavoritePrograms(loginEmail);
+  Future<List<Program>> getFavoritePrograms(email) async => profileService.getFavoritePrograms(loginEmail);
 }

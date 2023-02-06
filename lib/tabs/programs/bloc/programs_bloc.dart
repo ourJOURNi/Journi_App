@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:layout/login/login-page.dart';
 import '../../../../../repository/models/model_barrel.dart';
 import '../../../../../repository/program_repository.dart';
 
@@ -13,6 +14,8 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
   }) : super(const ProgramsState()) {
     on<GetPrograms>(_mapGetProgramsEventToState);
     on<SearchPrograms>(_mapSearchProgramsEventToState);
+    on<SortProgramsBySoonest>(_mapSortProgramsBySoonestEventToState);
+    on<SortProgramsByFurthest>(_mapSortProgramsByFurthestEventToState);
     on<GetProgramsByFavorites>(_mapGetProgramsFavoritesEventToState);
     on<GetProgramsByCategoryOne>(_mapGetProgramsByCategoryOneEventToState);
     on<GetProgramsByCategoryTwo>(_mapGetProgramsByCategoryTwoEventToState);
@@ -32,6 +35,7 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
     try {
       emit(state.copyWith(status: ProgramsStatus.loading));
       final programs = await programRepository.getPrograms();
+      programs.sort((a, b) => a.date.compareTo(b.date));
       
       emit(
         state.copyWith(
@@ -92,7 +96,44 @@ class ProgramsBloc extends Bloc<AllProgramsEvent, ProgramsState> {
       GetProgramsByFavorites event, Emitter<ProgramsState> emit) async {
     try {
       emit(state.copyWith(status: ProgramsStatus.loading));
-      final programs = await programRepository.getFavoritePrograms();
+      final programs = await programRepository.getFavoritePrograms(loginEmail);
+      print(programs);
+      emit(
+        state.copyWith(
+          status: ProgramsStatus.success,
+          programs: programs,
+        ),
+      );
+    } catch (error) {
+      print(error);
+      emit(state.copyWith(status: ProgramsStatus.error));
+    }
+  }
+  void _mapSortProgramsBySoonestEventToState(
+      SortProgramsBySoonest event, Emitter<ProgramsState> emit) async {
+    try {
+      emit(state.copyWith(status: ProgramsStatus.loading));
+      final programs = await programRepository.getPrograms();
+      programs.sort((a, b) => a.date.compareTo(b.date));
+      print(programs);
+      emit(
+        state.copyWith(
+          status: ProgramsStatus.success,
+          programs: programs,
+        ),
+      );
+    } catch (error) {
+      print(error);
+      emit(state.copyWith(status: ProgramsStatus.error));
+    }
+  }
+  void _mapSortProgramsByFurthestEventToState(
+      SortProgramsByFurthest event, Emitter<ProgramsState> emit) async {
+    try {
+      emit(state.copyWith(status: ProgramsStatus.loading));
+      final programs = await programRepository.getPrograms();
+      programs.sort((a, b) => b.date.compareTo(a.date));
+      print(programs);
       emit(
         state.copyWith(
           status: ProgramsStatus.success,

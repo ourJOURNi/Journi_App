@@ -18,6 +18,14 @@ class SearchPrograms extends AllProgramsEvent {
   SearchPrograms(this.programs, this.searchTapped, this.searchTerm, this.searchEmpty);
 
 }
+class SortProgramsBySoonest extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+}
+class SortProgramsByFurthest extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+}
 class GetProgramsByFavorites extends AllProgramsEvent {
   @override
   List<Object?> get props => [];

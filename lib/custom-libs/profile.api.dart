@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../tabs/profile/bloc/profile_bloc.dart';
 
+String baseURL = dotenv.env['IP']!;
 
 void configLoading() {
   EasyLoading.instance
@@ -32,7 +34,7 @@ Future<void> updateProfilePicture(
   TextEditingController emailCTRL,
   TextEditingController passwordCTRL,
   ) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-profile-picture');
+  final Uri url = Uri.http(dotenv.env['IP']!, '/api/profile/update-profile-picture');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   await http.post(
@@ -76,7 +78,7 @@ Future<void> updateName(
   TextEditingController lastNameCTRL,
   TextEditingController passwordCTRL
   ) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-name');
+  final Uri url = Uri.http(baseURL, '/api/profile/update-name');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   await http.post(
@@ -117,7 +119,7 @@ Future<String> updateEmail(
   TextEditingController newEmailCTRL,
   TextEditingController passwordCTRL,
   ) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-email');
+  final Uri url = Uri.http(baseURL, '/api/profile/update-email');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   await http.post(
@@ -165,7 +167,7 @@ Future<void> updatePassword(
   TextEditingController oldPasswordPasswordCTRL,
   TextEditingController newPasswordPasswordCTRL
   ) async {
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/update-password');
+  final Uri url = Uri.http(baseURL, '/api/profile/update-password');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   await http.post(
@@ -197,7 +199,7 @@ Future<void> updatePassword(
 }
 
 Future<Map <String, dynamic>> getProfileInfo() async {
-    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/get-user-profile');
+    final Uri url = Uri.http(baseURL, '/api/profile/get-user-profile');
     final Map<String, String> customHeaders = {"content-type": "application/json" };       
     late Map <String, dynamic> profile;
     await http.post(
