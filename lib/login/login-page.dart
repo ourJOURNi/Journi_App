@@ -4,7 +4,7 @@ import 'forgot-pass-page.dart';
 import '../custom-libs/onboarding.api.dart';
 
 String loginEmail = "eddie@journi.org";
-String password = "2222";
+String password = "1111";
 
 
 class LoginPage extends StatelessWidget {
@@ -35,6 +35,7 @@ class LoginPage extends StatelessWidget {
                   )
                 ),
                 const LoginForm(),
+                verticalButtonDivider,
                 verticalButtonDivider,
                 // Login
                 ElevatedButton(

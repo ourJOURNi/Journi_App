@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import '../models/model_barrel.dart';
 import '../models/result_error.dart';
 import '../../login/login-page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+String baseURL = dotenv.env['IP']!;
 
 class ProfileService {
   ProfileService({
@@ -22,7 +23,7 @@ class ProfileService {
   Future<Profile> getProfile(email) async {
     print('$email from getProfile() in Profile Service');
 
-    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/get-user-profile');
+    final Uri url = Uri.http(baseURL, '/api/profile/get-user-profile');
     final response = await _httpClient.post(
       url,
       headers: customHeaders,
@@ -35,7 +36,13 @@ class ProfileService {
 
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
-          return Profile(email: parsedJSON['email'], firstName: parsedJSON['firstName'], lastName: parsedJSON['lastName'], dateRegistered: parsedJSON['dateRegistered']);
+          return Profile(
+            email: parsedJSON['email'], 
+            firstName: parsedJSON['firstName'], 
+            lastName: parsedJSON['lastName'], 
+            dateRegistered: parsedJSON['dateRegistered'],
+            profilePicture: parsedJSON['profilePicture']
+          );
 
       } else {
         throw ErrorEmptyResponse();
@@ -46,7 +53,7 @@ class ProfileService {
   }
   Future<List<Program>> getFavoritePrograms(email) async {
     print('$loginEmail from getFavoritePrograms() in Profile Service');
-    final Uri url = Uri.http('192.168.0.169:8000', '/api/profile/get-favorite-programs');
+    final Uri url = Uri.http(baseURL, '/api/profile/get-favorite-programs');
     final response = await _httpClient.post(
       url,
       headers: customHeaders,

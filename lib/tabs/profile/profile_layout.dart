@@ -38,7 +38,7 @@ import 'package:skeleton_text/skeleton_text.dart';
                           borderRadius: BorderRadius.circular(120)),
                         child: CircleAvatar(
                         radius: 75,
-                        backgroundImage: AssetImage('assets/fbs-eddie.png')
+                        backgroundImage: NetworkImage(state.profile.profilePicture)
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -58,7 +58,7 @@ import 'package:skeleton_text/skeleton_text.dart';
                   ),
                 ),
                 const SizedBox(height: 20),
-                updatePhotoModal(context, blocContext),
+                updatePhotoModal(context, blocContext, state.profile.profilePicture),
                 updateNameModal(context, blocContext, state.profile.email, state.profile.firstName, state.profile.lastName),
                 updateEmailModal(context, state, state.profile.email),
                 updatePasswordModal(context, blocContext, state.profile.email),

@@ -1,10 +1,12 @@
 import 'dart:convert';
 
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import '../models/model_barrel.dart';
 import '../models/result_error.dart';
+
+String baseURL = dotenv.env['IP']!;
 
 class ProgramService {
   ProgramService({
@@ -16,7 +18,7 @@ class ProgramService {
   // final String ip = dotenv.get('IP');
   final Client _httpClient;
 
-  final Uri url = Uri.http('192.168.0.169:8000', '/api/programs/get-all-programs');
+  final Uri url = Uri.http(baseURL, '/api/programs/get-all-programs');
   final Map<String, String> customHeaders = {"content-type": "application/json" };
 
   Future<List<Program>> getPrograms() async {

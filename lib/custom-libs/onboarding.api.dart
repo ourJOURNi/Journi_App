@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:layout/login/login-page.dart';
 import '../login/register-page.dart';
 import 'snackbars.dart';
 import '../main.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:dio/dio.dart';
+import 'package:path/path.dart';
 
 String baseURL = dotenv.env['IP']!;
 
@@ -29,23 +31,22 @@ void configLoginLoading() {
 }
 
 Future<void> logout(context) async{
-  EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
-                .then((value) => {
-                  Timer(const Duration(seconds: 1), () => {
-                    warningSnackBar(context, "Logged out Successfully"),
-                    EasyLoading.dismiss(),
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
-                      ),
-                    ),
-                  }
-                  )
-                }
-              );
+  print('Attempting to Logout..');
+  EasyLoading.showSuccess('logging out ...', duration: const Duration(seconds: 1))
+    .then((value) => {
+      Timer(const Duration(seconds: 1), () => {
+       warningSnackBar(context, "Logged out Successfully"),
+       EasyLoading.dismiss(),
+       Navigator.of(context).push(
+         MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+       ),
+     }
+     )
+    }
+  );
 }
-
-String userEmail = '';
 
 Future<void> login(
   String loginEmail, 
@@ -78,8 +79,6 @@ Future<void> login(
       print(parsedJSON);
     }
 
-    userEmail = email;
-
       EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
         .then((value) => {
           emailCTRL.clear(),
@@ -104,29 +103,37 @@ Future<void> login(
 
     }
 
-
-
 Future<void> register(
   String firstName, 
   String lastName, 
   String email, 
   String password, 
-  String profilePicture,
+  File profilePicture,
   BuildContext context, 
   TextEditingController firstNameCTRL,
   TextEditingController lastNameCTRL,
   TextEditingController emailCTRL,
   TextEditingController passwordCTRL
   ) async {
-    final Uri url = Uri.http(baseURL, '/api/profile/register-profile');
-    final Map<String, String> customHeaders = {"content-type": "application/json" };
 
-    await http.post(
-          url, 
-          headers: customHeaders,
-          body: jsonEncode({"email": email, "password": password, "firstName": firstName, "lastName": lastName}))
+    // Make FormData Object
+
+    var registerFormData = FormData.fromMap({
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password,
+      'profile-picture': await MultipartFile.fromFile(profilePicture.path, filename: basename(profilePicture.path))
+    });
+
+    final Uri url = Uri.http(baseURL, '/api/profile/register-profile');
+
+    var dio = Dio();
+    await dio.post(
+          url.toString(),
+          data: registerFormData
+          )
             .then((value) => {
-              print(value.request),
               print(value.statusCode),
 
               if(value.statusCode == 200) {

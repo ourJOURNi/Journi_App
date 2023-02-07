@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:layout/login/login-page.dart';
 import '../home/bloc/home_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../global-styles.dart';
@@ -198,7 +199,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                               onPressed: () => {
                               Navigator.of(context).push(
                                  MaterialPageRoute(
-                                   builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
+                                   builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: loginEmail),
                                  ),
                                )
                             }, child: Text('Tap'))
