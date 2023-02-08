@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -11,11 +10,8 @@ String baseURL = dotenv.env['IP']!;
 class ProgramService {
   ProgramService({
     http.Client? httpClient,
-    this.baseUrl = 'http://192.168.0.169:8000/api',
   }) : _httpClient = httpClient ?? http.Client();
 
-  final String baseUrl;
-  // final String ip = dotenv.get('IP');
   final Client _httpClient;
 
   final Uri url = Uri.http(baseURL, '/api/programs/get-all-programs');
@@ -32,6 +28,27 @@ class ProgramService {
           json.decode(response.body).map(
                 (data) => Program.fromJson(data),
               ),
+          );
+      } else {
+        throw ErrorEmptyResponse();
+      }
+    } else {
+      throw ErrorGettingPrograms('Error getting games');
+    }
+  }
+  Future<List<Program>> getProgram(String id) async {
+    print('$id from getProgram() in Program Service');
+    final Uri url = Uri.http(baseURL, '/api/program/get-program-info');
+
+    final response = await _httpClient.post(
+      url,
+      headers: customHeaders,
+      body: jsonEncode({'id': id})
+    );
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+          return json.decode(response.body).map(
+            (data) => Program.fromJson(data),
           );
       } else {
         throw ErrorEmptyResponse();

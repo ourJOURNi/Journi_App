@@ -33,6 +33,36 @@ import 'package:flutter/material.dart';
         ),
       )
   };
+  favoriteSnackBar(context, text) => {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Color.fromARGB(255, 26, 227, 15),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.favorite, color: Colors.white),
+            const Divider(indent: 10),
+            Text(text)
+          ],
+        )
+        ),
+      )
+  };
+  unfavoriteSnackBar(context, text) => {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Color.fromARGB(255, 192, 18, 18),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.favorite, color: Colors.white),
+            const Divider(indent: 10),
+            Text(text)
+          ],
+        )
+        ),
+      )
+  };
   // Response 400
   warningSnackBar(context, text) => {
     ScaffoldMessenger.of(context).showSnackBar(

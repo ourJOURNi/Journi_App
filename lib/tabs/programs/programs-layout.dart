@@ -42,7 +42,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
                                 image: NetworkImage('${state.programs[index].photo}'),
                                 fit: BoxFit.cover
                               )
-
                             ),
                           ),
                           const SizedBox(height: 20),

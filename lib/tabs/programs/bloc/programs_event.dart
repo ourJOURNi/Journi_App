@@ -8,6 +8,10 @@ class GetPrograms extends AllProgramsEvent {
   @override
   List<Object?> get props => [];
 }
+class GetProgram extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+}
 class SearchPrograms extends AllProgramsEvent {
   @override
   List<Object?> get props => [];
@@ -29,6 +33,18 @@ class SortProgramsByFurthest extends AllProgramsEvent {
 class GetProgramsByFavorites extends AllProgramsEvent {
   @override
   List<Object?> get props => [];
+}
+class FavoriteProgram extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+  String id = '';
+  FavoriteProgram(this.id);
+}
+class UnfavoriteProgram extends AllProgramsEvent {
+  @override
+  List<Object?> get props => [];
+  String id = '';
+  UnfavoriteProgram(this.id);
 }
 class GetProgramsByCategoryOne extends AllProgramsEvent {
   @override
