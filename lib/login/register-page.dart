@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import '../global-styles.dart';
 import '../custom-libs/onboarding.api.dart';
 import '../custom-libs/camera.dart';
-
 
 String firstName = "";
 String lastName = "";
@@ -26,11 +24,11 @@ class _RegisterFormState extends State<RegisterForm> {
   final lastNameCTRL = TextEditingController();
   final emailCTRL = TextEditingController();
   final passwordCTRL = TextEditingController();
-  int _index = 0;
+
   bool gotPhoto = false;
   File photoFile = File('');
 
-  updatePhoto(File file) {
+  void updatePhoto(File file) {
     print(file);
     setState(() {
       gotPhoto = true;
@@ -190,6 +188,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
               ),
               const SizedBox(height: 40),
+
+              // Buttons
               Column(
                 children: [
                   // From Photo Gallery
@@ -235,18 +235,20 @@ class _RegisterFormState extends State<RegisterForm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
+                        // style: buttonOutlineStyle,
                         onPressed: () => {
                         controller.jumpToPage(0) 
                       }, 
-                        child: Text('Back')
+                        child: const Text('Back')
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       ElevatedButton(
+                        // style: buttonOutlineStyle,
                         onPressed: () => {
                           // TODO: Add Skip Logic
                           controller.jumpToPage(2) 
                         }, 
-                        child: Text('Skip')
+                        child: const Text('Skip')
                       )
                     ],
                   )
@@ -283,7 +285,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     TextFormField(
                       controller: passwordCTRL,
                       onChanged: (text) {
-                        email = text;
+                        password = text;
                         print('Password: ${password}');
                       },
                       decoration: const InputDecoration(
@@ -301,7 +303,7 @@ class _RegisterFormState extends State<RegisterForm> {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () => {
-                  register(firstName, lastName, email, password, 'profilePicture', context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
+                  register(firstName, lastName, email, password, profilePicture, context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
                   .then((value) => {
                     firstName = "",
                     lastName = "",

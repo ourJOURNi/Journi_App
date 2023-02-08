@@ -20,7 +20,6 @@ class ProgramsPage extends StatelessWidget {
         child: BlocProvider<ProgramsBloc>(
           create: (context) => ProgramsBloc(
             programRepository: context.read<ProgramRepository>(),
-            // profileRepository: context.read<ProfileRepository>()
             )
             ..add(GetPrograms(),
           ),

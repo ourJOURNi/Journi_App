@@ -1,105 +1,162 @@
- import 'package:flutter/material.dart';
-import 'package:layout/global-styles.dart';
-import '../../custom-libs/profile.api.dart';
+import 'dart:io';
 
-  Widget updatePhotoModal(context, blocContext) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    return ListTile(
-            leading: const Icon(Icons.camera_alt, color: Color.fromARGB(129, 82, 163, 255)),
-            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
-            title: const Text('Update Profile Picture'),
-            onTap: () => {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context, 
-                builder: (BuildContext context) {
-                    // getCamera();
-                    return Center(
-                      // heightFactor: 100.0,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget> [
-                          const Padding(
-                            padding:  EdgeInsets.only(top: 100),
-                            child: Text('Change Profile Picture',
-                              style: TextStyle(
-                                fontSize: 25,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: modalInputPadding,
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                  children: <Widget>[
-                                   const Padding(
-                                      padding: EdgeInsets.only(bottom: 30),
-                                      child: CircleAvatar(
-                                        minRadius: 50,
-                                        backgroundImage: NetworkImage('https://final-boss-logos.s3.us-east-2.amazonaws.com/F_Logo.svg'),
-                                      ),
-                                    ),
-                                    // SizedBox(
-                                    //   width: 200,
-                                    //   height: 200,
-                                    //   child: AspectRatio(
-                                    //   aspectRatio: userCamera.value.aspectRatio,
-                                    //   child: CameraPreview(userCamera),
-                                    //   ),
-                                    // ),
-                                    ElevatedButton(
-                                      style: buttonOrangeStyle,
-                                      onPressed: () => {
-                                        print("Getting Photo..."),
-                                      },
-                                      child: const Text('Get Photo')),
-                                    verticalInputDivider,
-                                    TextFormField(
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: 'Password',
-                                      ),
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                ],
-                              ),
-                            )
-                          ),
-                          ElevatedButton(
-                            style: modalButtonStyle,
-                            onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
-                              
-                              if (formKey.currentState!.validate()) {
-                                // Process data.
-                              }
-                            },
-                            child: const Text('Submit'),
-                          ),
-                          verticalButtonDivider,
-                          ElevatedButton(
-                            style: modalButtonCancelStyle,
-                            onPressed: () => {
-                              Navigator.pop(context)
-                            }, 
-                            child: const Text('Cancel', style: TextStyle(
-                              color: Colors.black87)
-                              )
-                          )
-                        ],
+import 'package:flutter/material.dart';
+import 'package:layout/global-styles.dart';
+import 'package:layout/login/login-page.dart';
+import 'package:layout/login/register-page.dart';
+import '../../custom-libs/profile.api.dart';
+import '../../custom-libs/onboarding.api.dart';
+import './../../custom-libs/camera.dart';
+
+
+class UpdateProfilePicWidget extends StatefulWidget {
+  const UpdateProfilePicWidget({super.key, required this.currentProfilePic});
+  final String currentProfilePic;
+
+  @override
+  State<UpdateProfilePicWidget> createState() => _UpdateProfilePicWidgetState();
+}
+
+class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool gotUpdatedPhoto = false;
+  File updatedProfilePicture = File('');
+  String email = '';
+  String password = '';
+  TextEditingController updatePhotoPasswordCTRL = TextEditingController();
+
+  resetPhoto() {
+    setState(() {
+      gotUpdatedPhoto = false;
+      updatePhotoPasswordCTRL.clear();
+    });
+  }
+
+  void updatePhoto(File file) {
+    print(file);
+    setState(() {
+      gotUpdatedPhoto = true;
+      updatedProfilePicture = file;
+      print(updatedProfilePicture);
+    });
+  }
+
+  
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+            const Padding(
+              padding:  EdgeInsets.only(top: 100),
+              child: Text('Change Profile Picture',
+                style: TextStyle(
+                fontSize: 25,
+              ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            !gotUpdatedPhoto ? 
+                      CircleAvatar(
+                        radius: 75,
+                        backgroundImage: NetworkImage(widget.currentProfilePic)
+                        ) 
+                      : CircleAvatar(
+                        radius: 75,
+                        backgroundImage: AssetImage(updatedProfilePicture.path)
+                        ),
+            Padding(
+              padding: modalInputPadding,
+              child: Form(
+              key: _formKey,
+              child: Column(
+                  children: <Widget>[
+                    ElevatedButton(
+                      style: buttonOrangeStyle,
+                      onPressed: () async => {
+                        print("Getting Photo..."),
+                        // Get file
+                        updatedProfilePicture = await proPicGallery(),
+
+                        // Pass in Image File
+                        updatePhoto(updatedProfilePicture)
+
+                        // // Pass in Image File
+                        // updatePhoto(updatePhotoFile)
+                      },
+                      child: const Text('Get Photo')),
+                    verticalInputDivider,
+                    TextFormField(
+                      onChanged: (e) => {
+                        print(e),
+                        password = e
+                      },
+                      controller: updatePhotoPasswordCTRL,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Password',
                       ),
-                    );
-                  }
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                ],
+              ),
+            )
+          ),
+            ElevatedButton(
+            style: modalButtonStyle,
+            onPressed: () async {
+              // Validate will return true if the form is valid, or false if
+              // the form is invalid.
+              
+              if (_formKey.currentState!.validate()) {
+                // Process data.
+              }
+              if(gotUpdatedPhoto) {
+                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordPasswordCTRL);
+                await resetPhoto();
+              }
+            },
+            child: const Text('Submit'),
+          ),
+            verticalButtonDivider,
+            ElevatedButton(
+              style: modalButtonCancelStyle,
+              onPressed: () => {
+                Navigator.pop(context)
+              }, 
+              child: const Text('Cancel', style: TextStyle(
+                color: Colors.black87)
                 )
+            )
+    ],
+  );
+  }
+
+  // ···
+}
+
+  Widget updatePhotoModal(context, blocContext, currentProfilePic) {
+
+    // File updatePhotoFile = currentProfilePic;
+    
+    return ListTile(
+      leading: const Icon(Icons.camera_alt, color: Color.fromARGB(129, 82, 163, 255)),
+      trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
+      title: const Text('Update Profile Picture'),
+      onTap: () => {
+         showModalBottomSheet(
+          isScrollControlled: true,
+          context: context, 
+          builder: (BuildContext context) {
+             // getCamera();
+             return UpdateProfilePicWidget(currentProfilePic: currentProfilePic);
             }
-          );
+          )
+       }
+    );
   }
   
   var newFirstName = "";
@@ -504,15 +561,15 @@ import '../../custom-libs/profile.api.dart';
                               ),),
                           ),
                           ElevatedButton(
-                            style: modalButtonStyle,
+                            style: buttonOrangeStyle,
                             onPressed: () => {
-                              //  logout(context)
+                               logout(context)
                             }, 
                             child: const Text('Logout')
                           ),
                           verticalButtonDivider,
                           ElevatedButton(
-                            style: modalButtonCancelStyle,
+                            style: buttonGreyStyle,
                             onPressed: () => {
                               Navigator.pop(context)
                             }, 

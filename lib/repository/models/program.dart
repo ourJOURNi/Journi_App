@@ -5,6 +5,7 @@ part 'program.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Program {
   const Program({
+    required this.id,
     required this.title,
     required this.category,
     required this.date,
@@ -12,6 +13,7 @@ class Program {
     required this.details,
     required this.photo,
   });
+  final String id;
   final String title;
   final String category;
   final String date;
@@ -20,6 +22,7 @@ class Program {
   final String photo;
 
   static const empty = Program(
+    id: '',
     title: '',
     category: '',
     date: '',

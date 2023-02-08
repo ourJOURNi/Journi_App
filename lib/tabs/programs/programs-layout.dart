@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:layout/custom-libs/onboarding.api.dart';
+import 'package:layout/login/login-page.dart';
 import 'package:layout/tabs/programs/bloc/programs_bloc.dart';
 import 'package:path/path.dart';
 import 'programs-toolbar.dart';
@@ -41,7 +42,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
                                 image: NetworkImage('${state.programs[index].photo}'),
                                 fit: BoxFit.cover
                               )
-
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -72,7 +72,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
   
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
-                                              builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: userEmail),
+                                              builder: (context) =>  ProgramPage(program: state.programs[index], userEmail: loginEmail),
                                             ),
                                           ),
                                         })
