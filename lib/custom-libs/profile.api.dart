@@ -38,6 +38,7 @@ Future<void> updateProfilePicture(
   BuildContext context,
   TextEditingController passwordCTRL,
   ) async {
+
   var updateProfilePictureFormData = FormData.fromMap({
       'password': password,
       'email': email,
@@ -51,7 +52,7 @@ Future<void> updateProfilePicture(
         url.toString(), 
         data: updateProfilePictureFormData
         )
-          .then((value) => {
+          .then((value) => {   
             if(value.statusCode == 200) {
               EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
                 .then((value) => {

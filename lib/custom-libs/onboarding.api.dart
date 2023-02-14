@@ -32,6 +32,8 @@ void configLoginLoading() {
 
 Future<void> logout(context) async{
   print('Attempting to Logout..');
+  loginEmail = "";
+  loginPassword = "";
   EasyLoading.showSuccess('logging out ...', duration: const Duration(seconds: 1))
     .then((value) => {
       Timer(const Duration(seconds: 1), () => {
@@ -61,14 +63,24 @@ Future<void> login(
     print('Attempting to login');
     print(loginEmail);
 
+    if(loginEmail == "") {
+      failureSnackBar(context, 'Please enter an Email');
+      return;
+    }
+
     final response = await http.post(
         url, 
         headers: customHeaders,
-        body: jsonEncode({"email": loginEmail, "password": password}));
-      
+        body: jsonEncode({"email": loginEmail, "password": password})
+    );
 
     final jsonResponse = response.body;
-    final parsedJSON = jsonDecode(jsonResponse);
+    final parsedJSON = await jsonDecode(jsonResponse);
+
+    if(parsedJSON['msg'] == "There was No Email or No Password in the Request!") {
+      failureSnackBar(context, 'The email and password don\'t match.');
+      return;
+    }
 
     if(response.statusCode == 200) {
       print('Status 200! @ Login');
@@ -117,7 +129,6 @@ Future<void> register(
   ) async {
 
     // Make FormData Object
-
     var registerFormData = FormData.fromMap({
       'firstName': firstName,
       'lastName': lastName,
@@ -126,15 +137,17 @@ Future<void> register(
       'profile-picture': await MultipartFile.fromFile(profilePicture.path, filename: basename(profilePicture.path))
     });
 
-    final Uri url = Uri.http(baseURL, '/api/profile/register-profile');
+    final Uri url = Uri.http(dotenv.env['IP']!, '/api/profile/register-profile');
 
     var dio = Dio();
     await dio.post(
           url.toString(),
           data: registerFormData
           )
-            .then((value) => {
+            .then((value) async => {
               print(value.statusCode),
+              print(value.data),
+
 
               if(value.statusCode == 200) {
                 EasyLoading.showSuccess('Registered!')
@@ -151,12 +164,14 @@ Future<void> register(
                   )
                   }),
               },
+              
               if(value.statusCode == 400) {
-                failureSnackBar(context, "Please use another email.")
+                failureSnackBar(context, 'The email and password don\'t match.')
               }
               // TODO: Handle Network and Server Errors
             })
             .catchError((e) => { print(e.toString())});
+            return;
 }
 
 Future<void> sendRegisterCode(String email, String code, BuildContext context) async {
@@ -196,11 +211,10 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // register("Test", "Account", "eddie@journi.org", "12345");
     return Scaffold(
         appBar: AppBar(
           title: const Text('Sign Up'),
-          backgroundColor: const Color.fromARGB(255, 221, 125, 0),
+          backgroundColor: const Color.fromARGB(240, 19, 119, 200),
         ),
         body: const RegisterForm()
     );

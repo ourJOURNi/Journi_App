@@ -28,11 +28,13 @@ ButtonStyle modalButtonCancelStyle = ElevatedButton.styleFrom(
 
 // Button Styles
 const buttonSize = Size(200.0, 40.0);
+const buttonSizeSm = Size(60.0, 40.0);
+
 ButtonStyle buttonBlueStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(
     fontSize: 15,
     ),
-  backgroundColor: const Color.fromARGB(255, 5, 130, 233),
+  backgroundColor: const Color.fromARGB(240, 19, 119, 200),
   minimumSize: buttonSize
 );
 ButtonStyle buttonGreenStyle = ElevatedButton.styleFrom(
@@ -57,12 +59,20 @@ textStyle: const TextStyle(
   backgroundColor: Color.fromARGB(255, 221, 125, 0),
   minimumSize: buttonSize
 );
-ButtonStyle buttonOutlineStyle = ElevatedButton.styleFrom(
 
-textStyle: const TextStyle(
-    fontSize: 15
+ButtonStyle buttonOutlineStyle = ElevatedButton.styleFrom(
+  textStyle: const TextStyle(
+    fontSize: 15,
+    backgroundColor: Colors.transparent
     ),
-  minimumSize: buttonSize
+    minimumSize: buttonSize
+);
+ButtonStyle buttonOutlineStyleSM = ElevatedButton.styleFrom(
+  textStyle: const TextStyle(
+    fontSize: 15,
+    backgroundColor: Colors.transparent
+    ),
+    minimumSize: buttonSizeSm
 );
 
 // Input Styles

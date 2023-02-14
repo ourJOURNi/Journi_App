@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:layout/custom-libs/snackbars.dart';
 import 'dart:io';
 import '../global-styles.dart';
 import '../custom-libs/onboarding.api.dart';
@@ -44,7 +45,6 @@ class _RegisterFormState extends State<RegisterForm> {
       /// [PageView.scrollDirection] defaults to [Axis.horizontal].
       /// Use [Axis.vertical] to scroll vertically.
       physics: const NeverScrollableScrollPhysics(),
-      
       controller: controller,
       children: <Widget>[
 
@@ -61,9 +61,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: const [
-                      Text('Personal Info', style: TextStyle(fontSize: 18)),
+                      Text('Personal Info', style: TextStyle(fontSize: 18, color: Color.fromARGB(240, 19, 119, 200), fontWeight: FontWeight.bold)),
                       Expanded( child: Divider(height: 0, color: Colors.transparent)),
-                      CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                      CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4,),
                       SizedBox(width: 4),
                       CircleAvatar(backgroundColor: Colors.grey, radius: 4,),
                       SizedBox(width: 4),
@@ -84,6 +84,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       },
                       decoration: const InputDecoration(
                         hintText: 'First Name',
+                        
                       ),
                       validator: (String? value) {
                         return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
@@ -137,7 +138,22 @@ class _RegisterFormState extends State<RegisterForm> {
                     margin: const EdgeInsets.only(top: 20, bottom: 50),
                     child: ElevatedButton(
                       onPressed: () {
-                        controller.jumpToPage(1);
+                        print(firstNameCTRL.value.text);
+                        print(lastNameCTRL.value.text);
+                        print(emailCTRL.value.text);
+
+                        if(
+                          firstNameCTRL.value.text.isEmpty || 
+                          lastNameCTRL.value.text.isEmpty || 
+                          emailCTRL.value.text.isEmpty 
+                        ) {
+                          failureSnackBar(context, 'Please fill out all fiels.');
+                          return;
+
+                        } else {
+                          controller.jumpToPage(1);
+                        }
+                        
                       },
                       style: buttonGreenStyle,
                       child: const Text('Next', style: TextStyle(fontSize: 16)),
@@ -159,13 +175,13 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: const [
-                  Text('Profile Picture', style: TextStyle(fontSize: 18)),
-                  Expanded( child: Divider(height: 0, color: Colors.transparent)),
-                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
-                  SizedBox(width: 4),
-                  CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
-                  SizedBox(width: 4),
-                  CircleAvatar(backgroundColor: Colors.grey, radius: 4,)
+                    Text('Profile Picture', style: TextStyle(fontSize: 18, color: Color.fromARGB(240, 19, 119, 200), fontWeight: FontWeight.bold)),
+                    Expanded( child: Divider(height: 0, color: Colors.transparent)),
+                    CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4),
+                    SizedBox(width: 4),
+                    CircleAvatar(backgroundColor: Colors.grey, radius: 4,)
                 ],)
               ),
               const SizedBox(height: 30),
@@ -204,7 +220,15 @@ class _RegisterFormState extends State<RegisterForm> {
                       // Pass in Image File
                       updatePhoto(photoFile)
                     }, 
-                    child: const Text('Get from Photo Gallery')
+                    child: const Text.rich(
+                      TextSpan(
+                        children: [
+                          WidgetSpan(child: Icon(Icons.photo_album_outlined)),
+                          WidgetSpan(child: SizedBox(width: 10)),
+                          TextSpan(text: 'Gallery'),
+                        ],
+                      ),
+                    )
                   ),
                   // From Camera
                   ElevatedButton(
@@ -217,7 +241,15 @@ class _RegisterFormState extends State<RegisterForm> {
                       // Pass in Image File
                       updatePhoto(photoFile)
                     }, 
-                    child: Text('Get from Camera')
+                    child: const Text.rich(
+                      TextSpan(
+                        children: [
+                          WidgetSpan(child: Icon(Icons.camera_alt_outlined)),
+                          WidgetSpan(child: SizedBox(width: 10)),
+                          TextSpan(text: 'Camera'),
+                        ],
+                      ),
+                    )
                   ),
                   const SizedBox(height: 40),
                   
@@ -230,20 +262,21 @@ class _RegisterFormState extends State<RegisterForm> {
                     child: Text('Next')
                   ),
                   const SizedBox(height: 20),
+
                   // Back & Skip Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        // style: buttonOutlineStyle,
+                      OutlinedButton(
+                        style: buttonOutlineStyleSM,
                         onPressed: () => {
                         controller.jumpToPage(0) 
                       }, 
                         child: const Text('Back')
                       ),
                       const SizedBox(width: 4),
-                      ElevatedButton(
-                        // style: buttonOutlineStyle,
+                      OutlinedButton(
+                        style: buttonOutlineStyleSM,
                         onPressed: () => {
                           // TODO: Add Skip Logic
                           controller.jumpToPage(2) 
@@ -269,13 +302,13 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: const [
-                    Text('Personal Info', style: TextStyle(fontSize: 18)),
+                    Text('Personal Info', style: TextStyle(fontSize: 18, color: Color.fromARGB(240, 19, 119, 200), fontWeight: FontWeight.bold)),
                     Expanded( child: Divider(height: 0, color: Colors.transparent)),
-                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                    CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4,),
                     SizedBox(width: 4),
-                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,),
+                    CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4,),
                     SizedBox(width: 4),
-                    CircleAvatar(backgroundColor: Colors.blueGrey, radius: 4,)
+                    CircleAvatar(backgroundColor: Color.fromARGB(255, 255, 173, 58), radius: 4,)
                 ],)
               ),
               const SizedBox(height: 50),
@@ -303,6 +336,11 @@ class _RegisterFormState extends State<RegisterForm> {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () => {
+                  
+                  if(passwordCTRL.value.text.isEmpty) {
+                    failureSnackBar(context, 'Please fill out all fiels.')
+                  },
+
                   register(firstName, lastName, email, password, profilePicture, context, firstNameCTRL, lastNameCTRL, emailCTRL, passwordCTRL)
                   .then((value) => {
                     firstName = "",

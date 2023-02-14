@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'forgot-pass-page.dart';
 import '../custom-libs/onboarding.api.dart';
 
-String loginEmail = "eddie@journi.org";
-String password = "1111";
+String loginEmail = "";
+String loginPassword = "";
 
 
 class LoginPage extends StatelessWidget {
@@ -41,7 +41,7 @@ class LoginPage extends StatelessWidget {
                 ElevatedButton(
                   style: buttonBlueStyle,
                   onPressed: () => {
-                      login(loginEmail, password, context, loginEmailCTRL, passwordCTRL)
+                      login(loginEmail, loginPassword, context, loginEmailCTRL, passwordCTRL)
                         .then((value) => {
                           print('From Login Button'),
                           print(loginEmail),
@@ -90,6 +90,9 @@ class LoginPage extends StatelessWidget {
   } 
 }
 
+
+
+
 class LoginForm extends StatefulWidget  {
   const LoginForm({super.key});
   
@@ -133,8 +136,8 @@ class _LoginFormState extends State<LoginForm>  {
             child: 
               TextFormField(
                 onChanged: (text) {
-                  password = text;
-                  print('Password: ${password}');
+                  loginPassword = text;
+                  print('Password: ${loginPassword}');
                 },
                 decoration: const InputDecoration(
                   icon: Icon(Icons.lock),
@@ -144,7 +147,7 @@ class _LoginFormState extends State<LoginForm>  {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  return password;
+                  return loginPassword;
                 },
               ),
           )
