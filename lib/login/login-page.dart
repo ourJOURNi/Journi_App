@@ -139,6 +139,7 @@ class _LoginFormState extends State<LoginForm>  {
                   loginPassword = text;
                   print('Password: ${loginPassword}');
                 },
+                obscureText: true,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.lock),
                   hintText: 'Password',

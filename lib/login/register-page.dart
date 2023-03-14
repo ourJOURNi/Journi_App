@@ -25,6 +25,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final lastNameCTRL = TextEditingController();
   final emailCTRL = TextEditingController();
   final passwordCTRL = TextEditingController();
+  bool _viewPassword = true;
 
   bool gotPhoto = false;
   File photoFile = File('');
@@ -41,6 +42,7 @@ class _RegisterFormState extends State<RegisterForm> {
   @override 
   Widget build(BuildContext context) {
     final PageController controller = PageController();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: PageView(
@@ -325,9 +327,22 @@ class _RegisterFormState extends State<RegisterForm> {
                         password = text;
                         print('Password: ${password}');
                       },
-                      decoration: const InputDecoration(
+                      obscureText: _viewPassword,
+                      decoration: InputDecoration(
                         hintText: 'Password',
-                        suffixIcon: Icon(Icons.remove_red_eye)
+                        suffixIcon: SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: GestureDetector(
+                            onTap: () => {
+                              setState(() => {
+                               print('Viewing Password'),
+                               _viewPassword = !_viewPassword
+                             })
+                            },
+                            child: const Icon(Icons.remove_red_eye),
+                          ),
+                        )
                       ),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
