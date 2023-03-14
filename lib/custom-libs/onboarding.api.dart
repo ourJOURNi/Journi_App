@@ -81,6 +81,10 @@ Future<void> login(
       failureSnackBar(context, 'The email and password don\'t match.');
       return;
     }
+    if(parsedJSON['msg'] == "The Profile does not exist") {
+      failureSnackBar(context, 'A profile doesn\'t exist with that email.');
+      return;
+    }
 
     if(response.statusCode == 200) {
       print('Status 200! @ Login');
