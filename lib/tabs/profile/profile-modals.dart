@@ -16,7 +16,6 @@ class UpdateProfilePicWidget extends StatefulWidget {
   @override
   State<UpdateProfilePicWidget> createState() => _UpdateProfilePicWidgetState();
 }
-
 class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool gotUpdatedPhoto = false;
@@ -90,6 +89,136 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                         password = e
                       },
                       controller: updatePhotoPasswordCTRL,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Password',
+                      ),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                ],
+              ),
+            )
+          ),
+            ElevatedButton(
+            style: modalButtonStyle,
+            onPressed: () async {
+              // Validate will return true if the form is valid, or false if
+              // the form is invalid.
+              
+              if (_formKey.currentState!.validate()) {
+                // Process data.
+              }
+              if(gotUpdatedPhoto) {
+                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordPasswordCTRL);
+                await resetPhoto();
+              }
+            },
+            child: const Text('Submit'),
+          ),
+            verticalButtonDivider,
+            ElevatedButton(
+              style: modalButtonCancelStyle,
+              onPressed: () => {
+                Navigator.pop(context)
+              }, 
+              child: const Text('Cancel', style: TextStyle(
+                color: Colors.black87)
+                )
+            )
+    ],
+  );
+  }
+
+  // ···
+}
+
+class UpdatePasswordWidget extends StatefulWidget {
+  const UpdatePasswordWidget({super.key, required this.currentProfilePic});
+  final String currentProfilePic;
+
+  @override
+  State<UpdatePasswordWidget> createState() => _UpdatePasswordWidgetState();
+}
+class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool gotUpdatedPhoto = false;
+  File updatedProfilePicture = File('');
+  String email = '';
+  String password = '';
+  TextEditingController updatePhotoPasswordCTRL = TextEditingController();
+
+  resetPhoto() {
+    setState(() {
+      gotUpdatedPhoto = false;
+      updatePhotoPasswordCTRL.clear();
+    });
+  }
+
+  void updatePhoto(File file) {
+    print(file);
+    setState(() {
+      gotUpdatedPhoto = true;
+      updatedProfilePicture = file;
+      print(updatedProfilePicture);
+    });
+  }
+
+  
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+            const Padding(
+              padding:  EdgeInsets.only(top: 100),
+              child: Text('Change Profile Picture',
+                style: TextStyle(
+                fontSize: 25,
+              ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            !gotUpdatedPhoto ? 
+                      CircleAvatar(
+                        radius: 75,
+                        backgroundImage: NetworkImage(widget.currentProfilePic)
+                        ) 
+                      : CircleAvatar(
+                        radius: 75,
+                        backgroundImage: AssetImage(updatedProfilePicture.path)
+                        ),
+            Padding(
+              padding: modalInputPadding,
+              child: Form(
+              key: _formKey,
+              child: Column(
+                  children: <Widget>[
+                    ElevatedButton(
+                      style: buttonOrangeStyle,
+                      onPressed: () async => {
+                        print("Getting Photo..."),
+                        // Get file
+                        updatedProfilePicture = await proPicGallery(),
+
+                        // Pass in Image File
+                        updatePhoto(updatedProfilePicture)
+
+                        // // Pass in Image File
+                        // updatePhoto(updatePhotoFile)
+                      },
+                      child: const Text('Get Photo')),
+                    verticalInputDivider,
+                    TextFormField(
+                      onChanged: (e) => {
+                        print(e),
+                        password = e
+                      },
+                      controller: updatePhotoPasswordCTRL,
+                      obscureText: true,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
@@ -248,6 +377,7 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                                       updateNamePassword = text,
                                       print(newLastName),
                                     },
+                                    obscureText: true,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Password',
@@ -369,6 +499,7 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                                       emailPassword = text,
                                       print(emailPassword),
                                     },
+                                    obscureText: true,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Password',
@@ -433,6 +564,8 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
   var oldPassword = "";
   var oldPasswordPasswordCTRL = TextEditingController();
   var updatePasswordPasswordCTRL = TextEditingController();
+  bool _viewPassword = true;
+  
   Widget updatePasswordModal(context, blocContext, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return ListTile(
@@ -468,9 +601,23 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                                       newPassword = text,
                                       print(newPassword),
                                     },
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(),
                                       hintText: 'Enter your new Password',
+                                      suffixIcon: SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: GestureDetector(
+                                          onTap: () => {
+                                          //   setState(() => {
+                                          //    print('Viewing Password'),
+                                          //    _viewPassword = !_viewPassword
+                                          //  })
+                                          },
+                                          child: const Icon(Icons.remove_red_eye),
+                                        ),
+                                      )
                                     ),
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
@@ -486,6 +633,7 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                                       oldPassword = text,
                                       print(text),
                                     },
+                                    obscureText: true,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Enter your current Password',
@@ -574,7 +722,7 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                               Navigator.pop(context)
                             }, 
                             child: const Text('Cancel', style: TextStyle(
-                              color: Colors.black87)
+                              color: Color.fromARGB(221, 170, 170, 170))
                               )
                           )],
                       ),
