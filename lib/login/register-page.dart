@@ -41,7 +41,9 @@ class _RegisterFormState extends State<RegisterForm> {
   @override 
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    return PageView(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: PageView(
       /// [PageView.scrollDirection] defaults to [Axis.horizontal].
       /// Use [Axis.vertical] to scroll vertically.
       physics: const NeverScrollableScrollPhysics(),
@@ -134,14 +136,12 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                 ),
                 expandedBottomOfPageDivider,
-                Container(
+                GestureDetector(
+                  onTap: null,
+                  child: Container(
                     margin: const EdgeInsets.only(top: 20, bottom: 50),
                     child: ElevatedButton(
                       onPressed: () {
-                        print(firstNameCTRL.value.text);
-                        print(lastNameCTRL.value.text);
-                        print(emailCTRL.value.text);
-
                         if(
                           firstNameCTRL.value.text.isEmpty || 
                           lastNameCTRL.value.text.isEmpty || 
@@ -151,6 +151,9 @@ class _RegisterFormState extends State<RegisterForm> {
                           return;
 
                         } else {
+
+                          // Closes Keyboard
+                          FocusScope.of(context).unfocus();
                           controller.jumpToPage(1);
                         }
                         
@@ -158,6 +161,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       style: buttonGreenStyle,
                       child: const Text('Next', style: TextStyle(fontSize: 16)),
                     ),
+                ),
                 ),
               ],
             ),
@@ -362,6 +366,7 @@ class _RegisterFormState extends State<RegisterForm> {
           )
         ),
       ],
-    ); 
+    ),
+    );
   }
 }
