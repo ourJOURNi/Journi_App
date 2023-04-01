@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:layout/login/login-page.dart';
 import 'package:path/path.dart';
 import 'snackbars.dart';
 import '../main.dart';
@@ -194,6 +195,40 @@ Future<void> updatePassword(
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => Tabs(email: email),
+                      ),
+                    ),
+                  })
+                }),
+            },
+            if(value.statusCode == 400) {
+                failureSnackBar(context, "Bad email or password.")
+            }
+          })
+          .catchError((e) => { print(e.toString())});
+}
+
+Future<void> deleteProfile(
+  BuildContext context,
+  String email, 
+  String password
+  ) async {
+  final Uri url = Uri.http(baseURL, '/api/profile/delete-profile');
+  final Map<String, String> customHeaders = {"content-type": "application/json" };
+
+  await http.post(
+        url, 
+        headers: customHeaders,
+        body: jsonEncode({"email": email, "password": password}))
+          .then((value) => {
+            if(value.statusCode == 200) {
+              EasyLoading.showSuccess('Deleting Profile ...', duration: const Duration(seconds: 2))
+                .then((value) => {
+                  Timer(const Duration(seconds: 2), () => {
+                    successSnackBar(context, "Deleted Profile Successfully!"),
+                    EasyLoading.dismiss(),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
                       ),
                     ),
                   })

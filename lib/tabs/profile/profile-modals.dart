@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:layout/custom-libs/snackbars.dart';
 import 'package:layout/global-styles.dart';
 import 'package:layout/login/login-page.dart';
-import 'package:layout/login/register-page.dart';
 import '../../custom-libs/profile.api.dart';
 import '../../custom-libs/onboarding.api.dart';
 import './../../custom-libs/camera.dart';
-
 
 class UpdateProfilePicWidget extends StatefulWidget {
   const UpdateProfilePicWidget({super.key, required this.currentProfilePic});
@@ -91,7 +89,6 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                       controller: updatePhotoPasswordCTRL,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
                         hintText: 'Password',
                       ),
                       validator: (String? value) {
@@ -115,7 +112,7 @@ class _UpdateProfilePicWidgetState extends State<UpdateProfilePicWidget> {
                 // Process data.
               }
               if(gotUpdatedPhoto) {
-                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordPasswordCTRL);
+                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordCTRL);
                 await resetPhoto();
               }
             },
@@ -220,7 +217,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                       controller: updatePhotoPasswordCTRL,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
                         hintText: 'Password',
                       ),
                       validator: (String? value) {
@@ -244,7 +240,7 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                 // Process data.
               }
               if(gotUpdatedPhoto) {
-                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordPasswordCTRL);
+                await updateProfilePicture(loginEmail, password, updatedProfilePicture, context, updatePasswordCTRL);
                 await resetPhoto();
               }
             },
@@ -337,7 +333,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                       print(newFirstName),
                                     },
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       // focusColor: Color.fromARGB(240, 19, 119, 200),
                                       hintText: 'First name',
                                     ),
@@ -358,7 +353,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                       print(newLastName),
                                     },
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       hintText: 'Last Name',
                                     ),
                                     validator: (String? value) {
@@ -379,7 +373,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                     },
                                     obscureText: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       hintText: 'Password',
                                     ),
                                     validator: (String? value) {
@@ -481,7 +474,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                       print(newEmail),
                                     },
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       hintText: 'Enter your new Email',
                                     ),
                                     validator: (String? value) {
@@ -501,7 +493,6 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                     },
                                     obscureText: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       hintText: 'Password',
                                     ),
                                     validator: (String? value) {
@@ -562,9 +553,8 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
   
   var newPassword = "";
   var oldPassword = "";
-  var oldPasswordPasswordCTRL = TextEditingController();
-  var updatePasswordPasswordCTRL = TextEditingController();
-  bool _viewPassword = true;
+  var oldPasswordCTRL = TextEditingController();
+  var updatePasswordCTRL = TextEditingController();
   
   Widget updatePasswordModal(context, blocContext, currentEmail) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -596,14 +586,13 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                   TextFormField(
-                                    controller: updatePasswordPasswordCTRL,
+                                    controller: updatePasswordCTRL,
                                     onChanged: (text) => {
                                       newPassword = text,
                                       print(newPassword),
                                     },
                                     obscureText: true,
                                     decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
                                       hintText: 'Enter your new Password',
                                       suffixIcon: SizedBox(
                                         height: 40,
@@ -628,14 +617,13 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                                   ),
                                   verticalButtonDivider,
                                   TextFormField(
-                                    controller: oldPasswordPasswordCTRL,
+                                    controller: oldPasswordCTRL,
                                     onChanged: (text) => {
                                       oldPassword = text,
                                       print(text),
                                     },
                                     obscureText: true,
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
                                       hintText: 'Enter your current Password',
                                     ),
                                     validator: (String? value) {
@@ -658,7 +646,7 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                             if (formKey.currentState!.validate()) {
                               // Process data.
                             }
-                            updatePassword(context, blocContext, currentEmail, oldPassword, newPassword, oldPasswordPasswordCTRL, updatePasswordPasswordCTRL);
+                            updatePassword(context, blocContext, currentEmail, oldPassword, newPassword, oldPasswordCTRL, updatePasswordCTRL);
 
                           },
                           child: const Text('Submit'),
@@ -684,18 +672,26 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
   
   Widget logoutModal(context) {
     return ListTile(
-            leading: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 173, 58)),
-            title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 248, 145, 0), fontSize: 18)),
+            leading: const Icon(Icons.logout, color: Color.fromARGB(129, 82, 163, 255)),
+            title: const Text('Logout',),
             trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
             onTap: () => {
               showModalBottomSheet(
+                isScrollControlled: true,
                 context: context, 
                 builder: (BuildContext context) {
                     return Center(
                       heightFactor: 100.0,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget> [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 100),
+                            child: Text('Logout',
+                              style: TextStyle(
+                                fontSize: 25,
+                              ),),
+                          ),
+                          const SizedBox(height: 25),
                           const Icon(
                             Icons.logout,
                             color: Colors.red,
@@ -703,13 +699,13 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                             ),
                           const Padding(
                             padding: EdgeInsets.only(top: 45, bottom: 15),
-                            child: Text('Are you sure you want to logout?', 
+                            child: Text('Are you sure?', 
                               style: TextStyle(
                                 fontSize: 18,
                               ),),
                           ),
                           ElevatedButton(
-                            style: buttonOrangeStyle,
+                            style: modalButtonStyle,
                             onPressed: () => {
                                logout(context)
                             }, 
@@ -717,7 +713,106 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
                           ),
                           verticalButtonDivider,
                           ElevatedButton(
-                            style: buttonGreyStyle,
+                            style: modalButtonCancelStyle,
+                            onPressed: () => {
+                              Navigator.pop(context)
+                            }, 
+                            child: const Text('Cancel', style: TextStyle(
+                              color: Color.fromARGB(221, 170, 170, 170))
+                              )
+                          )],
+                      ),
+                    );
+                  }
+                )
+            }
+          );
+  }
+  
+  var deleteProfilePassword = "";
+  var deleteProfilePasswordCTRL = TextEditingController();
+
+  Widget deleteProfileModal(context, email) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    
+    return ListTile(
+            leading: const Icon(Icons.delete, color: Color.fromARGB(129, 82, 163, 255)),
+            title: const Text('Delete Profile'),
+            trailing: const Icon(Icons.arrow_right, color: Color.fromARGB(36, 19, 119, 200)),
+            onTap: () => {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context, 
+                builder: (BuildContext context) {
+                    return Center(
+                      heightFactor: 100.0,
+                      child: Column(
+                        children: <Widget> [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 100),
+                            child: Text('Delete Profile',
+                              style: TextStyle(
+                                fontSize: 25,
+                              ),),
+                          ),
+                          const SizedBox(height: 25),
+                          const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 50.0,
+                            ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 45, bottom: 15),
+                            child: Text('Are you sure?', 
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),),
+                          ),
+                          Padding(
+                            padding: modalInputPadding,
+                            child: Form(
+                              key: formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                  TextFormField(
+                                    controller: deleteProfilePasswordCTRL,
+                                    onChanged: (text) => {
+                                      deleteProfilePassword = text,
+                                      print(text),
+                                    },
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Enter your Password',
+                                    ),
+                                    validator: (String? value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter some text';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  
+                                ],
+                              ),
+                            )
+                          ),
+                          ElevatedButton(
+                            style: modalButtonStyle,
+                            onPressed: () => {
+                                if(deleteProfilePasswordCTRL.value.text.isEmpty) {
+                                  failureSnackBar(context, 'Please enter a password'),
+                                } else {
+
+                                  deleteProfile(context, email, deleteProfilePassword),
+                                  deleteProfilePasswordCTRL.clear()
+                                }
+                            }, 
+                            child: const Text('Delete')
+                          ),
+                          verticalButtonDivider,
+                          ElevatedButton(
+                            style: modalButtonCancelStyle,
                             onPressed: () => {
                               Navigator.pop(context)
                             }, 

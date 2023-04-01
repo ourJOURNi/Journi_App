@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:layout/login/register-page.dart';
 import 'package:layout/tabs/profile/bloc/profile_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../profile/profile-modals.dart';
 import '../../global-styles.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-
 
   class ProfilesLayout extends StatelessWidget {
     const ProfilesLayout({super.key});
@@ -17,14 +17,14 @@ import 'package:skeleton_text/skeleton_text.dart';
             ? Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor: const Color.fromARGB(240, 19, 119, 200),
+                backgroundColor: const Color.fromARGB(239, 115, 158, 194),
                 shadowColor: Colors.transparent,
               ),
               body: ListView(
                children: [ 
                 
                 Container(
-                  color: const Color.fromARGB(240, 19, 119, 200),
+                  color: const Color.fromARGB(239, 115, 158, 194),
                   height: 250,
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: Column(
@@ -62,6 +62,7 @@ import 'package:skeleton_text/skeleton_text.dart';
                 updateNameModal(context, blocContext, state.profile.email, state.profile.firstName, state.profile.lastName),
                 updateEmailModal(context, state, state.profile.email),
                 updatePasswordModal(context, blocContext, state.profile.email),
+                deleteProfileModal(context, email),
                 logoutModal(context)
               ],
               ),

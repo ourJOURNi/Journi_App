@@ -7,6 +7,10 @@ const Divider verticalInputDivider = Divider(height: 16.0, color: Colors.transpa
 const Divider bigTransparentDivider = Divider(height: 80.0, color: Colors.transparent);
 const Expanded expandedBottomOfPageDivider =  Expanded( child: Divider(height: 0.8, color: Colors.transparent));
 
+// Button Styles
+const buttonSize = Size(200.0, 40.0);
+const buttonSizeSm = Size(60.0, 40.0);
+
 // Modal Styles 
 const modalInputPadding = EdgeInsets.all(50.0);
 const modalHeaderStyle = TextStyle(color: Color.fromARGB(255, 255, 173, 58), fontSize: 20);
@@ -14,21 +18,18 @@ ButtonStyle modalButtonStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(
     fontSize: 15,
     ),
-  minimumSize: const Size(150.0, 45.0)
-  
+  minimumSize: buttonSize,
+  backgroundColor: const Color.fromARGB(240, 19, 119, 200)
 );
 ButtonStyle modalButtonCancelStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(
     fontSize: 15,
-    color: Color.fromARGB(1, 4, 4, 4)
+    color: Color.fromARGB(240, 19, 119, 200)
     ),
-  backgroundColor: Color.fromARGB(255, 255, 255, 255),
-  minimumSize: const Size(150.0, 45.0)
+  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+  minimumSize: buttonSize,
 );
 
-// Button Styles
-const buttonSize = Size(200.0, 40.0);
-const buttonSizeSm = Size(60.0, 40.0);
 
 ButtonStyle buttonBlueStyle = ElevatedButton.styleFrom(
   textStyle: const TextStyle(

@@ -95,7 +95,7 @@ Future<void> login(
       print(parsedJSON);
     }
 
-      EasyLoading.showSuccess('loading...', duration: const Duration(seconds: 1))
+      EasyLoading.showSuccess('Logging In ...', duration: const Duration(seconds: 1))
         .then((value) => {
           emailCTRL.clear(),
           passwordCTRL.clear(),
